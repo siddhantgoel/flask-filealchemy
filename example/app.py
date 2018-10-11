@@ -1,5 +1,4 @@
 import os
-from functools import partial
 
 from flask import Flask, abort
 from sqlalchemy import Boolean, Column, ForeignKey, String
@@ -32,8 +31,6 @@ app.config['FILEALCHEMY_MODELS'] = (Author, Book)
 
 file_alchemy = FileAlchemy(app)
 
-not_found = partial(abort, 404)
-
 
 @app.route('/')
 def hello():
@@ -46,7 +43,7 @@ def author(slug):
         author = session.query(Author).filter(Author.slug == slug).first()
 
         if not author:
-            not_found()
+            abort(404)
 
         return author.name
 
@@ -57,6 +54,6 @@ def book(slug):
         book = session.query(Book).filter(Book.slug == slug).first()
 
         if not book:
-            not_found()
+            abort(404)
 
         return book
