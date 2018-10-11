@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "34930822c8bf943b3910e0e4e2e2878c49f6de01a17e4ccc970e872b562846ba"
+            "sha256": "8bcbde20834d7c0f123241939257cedef4578ae0f16ba5732dabc75f4d358d2d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -40,6 +40,10 @@
             ],
             "index": "pypi",
             "version": "==1.0"
+        },
+        "flask-filealchemy": {
+            "editable": true,
+            "path": "."
         },
         "flask-sqlalchemy": {
             "hashes": [

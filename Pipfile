@@ -12,6 +12,7 @@ isort = "==4.3.4"
 "flake8" = "==3.5.0"
 pyyaml = "==3.13"
 sqlalchemy = "==1.2.12"
+flask-filealchemy = {editable = true, path = "."}
 
 [requires]
 python_version = "3.7"
