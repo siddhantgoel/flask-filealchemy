@@ -32,7 +32,7 @@ class FileAlchemy:
     def _load_data(self):
         DeclarativeBase.metadata.create_all(self._engine)
 
-        with self.session() as session:
+        with self.make_session() as session:
             for model in self._models:
                 path = os.path.join(self._data_dir, model.__name__)
 
@@ -52,11 +52,10 @@ class FileAlchemy:
                     values = load(data)
 
                     session.add(model(**values))
-
             session.commit()
 
     @contextmanager
-    def session(self):
+    def make_session(self):
         try:
             session = self._sessionmaker()
             yield session

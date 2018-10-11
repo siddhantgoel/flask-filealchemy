@@ -42,7 +42,7 @@ def hello():
 
 @app.route('/authors/<slug>')
 def author(slug):
-    with file_alchemy.session() as session:
+    with file_alchemy.make_session() as session:
         author = session.query(Author).filter(Author.slug == slug).first()
 
         if not author:
@@ -53,7 +53,7 @@ def author(slug):
 
 @app.route('/books/<slug>')
 def book(slug):
-    with file_alchemy.session() as session:
+    with file_alchemy.make_session() as session:
         book = session.query(Book).filter(Book.slug == slug).first()
 
         if not book:
