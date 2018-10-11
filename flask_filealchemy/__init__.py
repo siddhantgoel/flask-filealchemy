@@ -10,10 +10,6 @@ from yaml import load
 DeclarativeBase = declarative_base()
 
 
-class MissingModelsError(Exception):
-    pass
-
-
 class FileAlchemy:
     def __init__(self, app):
         self.app = app
@@ -22,14 +18,13 @@ class FileAlchemy:
         self._sessionmaker = sessionmaker(bind=self._engine)
 
         self._data_dir = self.app.config.get('FILEALCHEMY_DATA_DIR')
-        self._models = self.app.config.get('FILEALCHEMY_MODELS')
+        self._models = []
 
-        if not self._models:
-            raise MissingModelsError()
+    def register_model(self, model):
+        if model not in self._models:
+            self._models.append(model)
 
-        self._load_data()
-
-    def _load_data(self):
+    def load_data(self):
         DeclarativeBase.metadata.create_all(self._engine)
 
         with self.make_session() as session:

@@ -27,9 +27,11 @@ app = Flask(__name__)
 app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'data'
 )
-app.config['FILEALCHEMY_MODELS'] = (Author, Book)
 
 file_alchemy = FileAlchemy(app)
+file_alchemy.register_model(Author)
+file_alchemy.register_model(Book)
+file_alchemy.load_data()
 
 
 @app.route('/')
