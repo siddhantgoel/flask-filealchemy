@@ -2,10 +2,29 @@ import os
 from functools import partial
 
 from flask import Flask, abort
+from sqlalchemy import Boolean, Column, ForeignKey, String
+from sqlalchemy.ext.declarative import declarative_base
 
 from flask_filealchemy import FileAlchemy
 
-from .models import Author, Book
+Base = declarative_base()
+
+
+class Author(Base):
+    __tablename__ = 'authors'
+
+    slug = Column(String(255), primary_key=True)
+    name = Column(String(255), nullable=False)
+
+
+class Book(Base):
+    __tablename__ = 'books'
+
+    slug = Column(String(255), primary_key=True)
+    title = Column(String(255), nullable=False)
+    author_slug = Column(String(255), ForeignKey('authors.slug'),
+                         nullable=False)
+    bestseller = Column(Boolean, server_default='false')
 
 app = Flask(__name__)
 app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
