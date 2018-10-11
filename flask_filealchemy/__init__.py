@@ -4,7 +4,7 @@ from contextlib import contextmanager
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 from yaml import load
 
 DeclarativeBase = declarative_base()
@@ -15,7 +15,7 @@ class FileAlchemy:
         self.app = app
 
         self._engine = create_engine('sqlite:///:memory:')
-        self._sessionmaker = sessionmaker(bind=self._engine)
+        self._sessionmaker = scoped_session(sessionmaker(bind=self._engine))
 
         self._data_dir = self.app.config.get('FILEALCHEMY_DATA_DIR')
         self._models = []
