@@ -13,7 +13,7 @@ app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
 )
 app.config['FILEALCHEMY_MODELS'] = (Author, Book)
 
-session = FileAlchemy(app)
+file_alchemy = FileAlchemy(app)
 
 not_found = partial(abort, 404)
 
@@ -25,19 +25,21 @@ def hello():
 
 @app.route('/authors/<slug>')
 def author(slug):
-    author = session.query(Author).filter(Author.slug == slug).first()
+    with file_alchemy.session() as session:
+        author = session.query(Author).filter(Author.slug == slug).first()
 
-    if not author:
-        not_found()
+        if not author:
+            not_found()
 
-    return author.name
+        return author.name
 
 
 @app.route('/books/<slug>')
 def book(slug):
-    book = session.query(Book).filter(Book.slug == slug).first()
+    with file_alchemy.session() as session:
+        book = session.query(Book).filter(Book.slug == slug).first()
 
-    if not book:
-        not_found()
+        if not book:
+            not_found()
 
-    return book
+        return book
