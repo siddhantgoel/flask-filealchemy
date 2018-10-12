@@ -5,59 +5,71 @@ from yaml import load
 
 
 class FileAlchemy:
+    _log_prefix = 'flask-filealchemy'
+
     def __init__(self, app, db):
         self.app = app
         self.db = db
 
         self._data_dir = self.app.config.get('FILEALCHEMY_DATA_DIR')
         self._models = self.app.config.get('FILEALCHEMY_MODELS')
+        self._logger = self.app.logger
 
         if not self._models:
             warnings.warn('flask-filealchemy: no models found')
 
-    def load_data(self):
+    def load_tables(self):
         self.db.create_all()
 
         for table in self.db.metadata.sorted_tables:
-            path = os.path.join(self._data_dir, table.name)
+            self._load_table(table)
 
-            if not os.path.isdir(path):
-                continue
+    def _load_table(self, table):
+        path = os.path.join(self._data_dir, table.name)
 
-            try:
-                session = self.db.session
+        try:
+            session = self.db.session
 
-                for file_ in os.listdir(path):
-                    data = None
+            for file_ in os.listdir(path):
+                obj = self._load_row(table, file_)
 
-                    try:
-                        with open(os.path.join(path, file_)) as fd:
-                            data = fd.read()
-                    except IOError:
-                        warnings.warn(
-                            'flask-filealchemy: unable to read {}'.format(
-                                file_))
-                        continue
+                if not obj:
+                    self._logger.warn('{}: unable to read {}'.format(
+                        self._log_prefix, file_))
+                    continue
 
-                    values = load(data)
+                session.add(obj)
+                self._logger.info(
+                    '{}: imported {}'.format(self._log_prefix, file_))
 
-                    kwargs = {
-                        column.name: values.get(column.name)
-                        for column in table.columns
-                    }
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
+        finally:
+            session.close()
 
-                    model = self._model_for(table.name)
+    def _load_row(self, table, filename):
+        data = None
 
-                    session.add(model(**kwargs))
-            except Exception:
-                session.rollback()
-                raise
-            else:
-                session.commit()
-            finally:
-                session.close()
+        try:
+            path = os.path.join(self._data_dir, table.name, filename)
 
-    def _model_for(self, table_name):
+            with open(path) as fd:
+                data = fd.read()
+        except IOError:
+            return False
+
+        values = load(data)
+
+        kwargs = {
+            column.name: values.get(column.name)
+            for column in table.columns
+        }
+
+        return self._model_for(table)(**kwargs)
+
+    def _model_for(self, table):
         for model in self._models:
-            if model.__tablename__ == table_name:
+            if model.__tablename__ == table.name:
                 return model

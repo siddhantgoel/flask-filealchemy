@@ -45,7 +45,7 @@ app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
 )
 app.config['FILEALCHEMY_MODELS'] = (Author, Book)
 
-FileAlchemy(app, db).load_data()
+FileAlchemy(app, db).load_tables()
 
 
 @app.route('/')
