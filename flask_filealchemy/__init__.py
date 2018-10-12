@@ -30,17 +30,17 @@ class FileAlchemy:
         try:
             session = self.db.session
 
-            for file_ in os.listdir(path):
-                obj = self._load_row(table, file_)
+            for file_name in os.listdir(path):
+                obj = self._load_row(table, file_name)
 
                 if not obj:
                     self._logger.warn('{}: unable to read {}'.format(
-                        self._log_prefix, file_))
+                        self._log_prefix, file_name))
                     continue
 
                 session.add(obj)
                 self._logger.info(
-                    '{}: imported {}'.format(self._log_prefix, file_))
+                    '{}: imported {}'.format(self._log_prefix, file_name))
 
             session.commit()
         except Exception:
@@ -49,27 +49,34 @@ class FileAlchemy:
         finally:
             session.close()
 
-    def _load_row(self, table, filename):
+    def _load_row(self, table, file_name):
         data = None
 
         try:
-            path = os.path.join(self._data_dir, table.name, filename)
+            path = os.path.join(self._data_dir, table.name, file_name)
 
             with open(path) as fd:
                 data = fd.read()
         except IOError:
-            return False
+            return None
 
-        values = load(data)
+        values = None
+
+        try:
+            values = load(data)
+        except ValueError:
+            return None
 
         kwargs = {
             column.name: values.get(column.name)
             for column in table.columns
         }
 
-        return self._model_for(table)(**kwargs)
+        model_cls = self._model_for(table)
+
+        return model_cls(**kwargs)
 
     def _model_for(self, table):
-        for model in self._models:
-            if model.__tablename__ == table.name:
-                return model
+        for model_cls in self._models:
+            if model_cls.__tablename__ == table.name:
+                return model_cls
