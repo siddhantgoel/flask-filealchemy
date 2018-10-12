@@ -54,15 +54,20 @@ class PublishCommand(Command):
 setup(
     name='flask-filealchemy',
     version='0.1.0',
-    description='File based models using SQLAlchemy for Flask',
+    description=(
+        'YAML-formatted plain-text file based models for Flask backed by '
+        'Flask-SQLAlchemy'
+    ),
     long_description=long_description,
     author='Siddhant Goel',
     author_email='me@sgoel.org',
     license='MIT',
     url='https://github.com/siddhantgoel/flask-filealchemy',
     packages=['flask_filealchemy'],
-    keywords=['flask', 'sqlalchemy', 'static-sites'],
-    install_requires=('Flask-SQLAlchemy>=2.1'),
+    keywords=['flask', 'sqlalchemy', 'yaml', 'plaintext', 'web'],
+    install_requires=(
+        'Flask-SQLAlchemy>=2.1',
+    ),
     python_requires='>=3.5.0',
     cmdclass={
         'publish': PublishCommand
