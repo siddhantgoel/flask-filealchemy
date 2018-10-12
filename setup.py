@@ -70,6 +70,10 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
+        'Environment :: Web Environment',
+        'Framework :: Flask',
+        'Internet :: WWW/HTTP :: Dynamic Content',
+        'Software Development :: Libraries :: Python Modules',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
