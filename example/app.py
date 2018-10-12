@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, abort
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean, Column, ForeignKey, String
+from sqlalchemy import Boolean, Column, ForeignKey, String, Text
 
 from flask_filealchemy import FileAlchemy
 
@@ -32,6 +32,7 @@ class Book(db.Model):
     author_slug = Column(String(255), ForeignKey('authors.slug'),
                          nullable=False)
     bestseller = Column(Boolean, server_default='false')
+    contents = Column(Text, default=None)
 
 
 # configure Flask-FileAlchemy
@@ -66,4 +67,4 @@ def book(slug):
     if not book:
         abort(404)
 
-    return book.title
+    return book.contents
