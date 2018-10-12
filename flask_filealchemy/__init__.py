@@ -16,7 +16,7 @@ class FileAlchemy:
         self._logger = self.app.logger
 
         if not self._models:
-            warnings.warn('flask-filealchemy: no models found')
+            warnings.warn('{}: no models found'.format(self._log_prefix))
 
     def load_tables(self):
         self.db.create_all()
