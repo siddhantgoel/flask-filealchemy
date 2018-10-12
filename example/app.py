@@ -3,6 +3,7 @@ import os
 from flask import Flask, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, Column, ForeignKey, String, Text
+from sqlalchemy.orm import relationship
 
 from flask_filealchemy import FileAlchemy
 
@@ -33,6 +34,8 @@ class Book(db.Model):
                          nullable=False)
     bestseller = Column(Boolean, server_default='false')
     contents = Column(Text, default=None)
+
+    author = relationship('Author', backref='books')
 
 
 # configure Flask-FileAlchemy
