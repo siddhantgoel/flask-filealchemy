@@ -4,6 +4,9 @@ Flask-FileAlchemy
 Flask-FileAlchemy lets you use YAML-formatted plain-text files as the data store
 for your Flask_ app.
 
+Background
+----------
+
 While there are better alternatives to use in production than plain-text (please
 don't use plain-text in production), the constraints on applications that only
 have to run locally are much more relaxed.
@@ -21,6 +24,12 @@ to your Flask application, which Frozen-Flask can then freeze.
 
 This lets you retain the comfort of dynamic sites without compromising on the
 simplicity of static sites.
+
+Installation
+------------
+
+Flask-FileAlchemy is not ready for prime time yet. I'll put it up on PyPI when
+it's ready.
 
 Usage
 -----
