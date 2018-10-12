@@ -1,33 +1,26 @@
 import os
 import warnings
-from contextlib import contextmanager
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
 from yaml import load
-
-DeclarativeBase = declarative_base()
 
 
 class FileAlchemy:
-    def __init__(self, app):
+    def __init__(self, app, db):
         self.app = app
-
-        self._engine = create_engine('sqlite:///:memory:')
-        self._sessionmaker = scoped_session(sessionmaker(bind=self._engine))
+        self.db = db
 
         self._data_dir = self.app.config.get('FILEALCHEMY_DATA_DIR')
-        self._models = []
+        self._models = self.app.config.get('FILEALCHEMY_MODELS')
 
-    def register_model(self, model):
-        if model not in self._models:
-            self._models.append(model)
+        if not self._models:
+            warnings.warn('Flask-FileAlchemy: no models found')
 
     def load_data(self):
-        DeclarativeBase.metadata.create_all(self._engine)
+        self.db.create_all()
 
-        with self.make_session() as session:
+        try:
+            session = self.db.session
+
             for model in self._models:
                 path = os.path.join(self._data_dir, model.__name__)
 
@@ -47,13 +40,6 @@ class FileAlchemy:
                     values = load(data)
 
                     session.add(model(**values))
-            session.commit()
-
-    @contextmanager
-    def make_session(self):
-        try:
-            session = self._sessionmaker()
-            yield session
         except Exception:
             session.rollback()
             raise

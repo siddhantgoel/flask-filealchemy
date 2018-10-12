@@ -1,19 +1,30 @@
 import os
 
 from flask import Flask, abort
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, Column, ForeignKey, String
 
-from flask_filealchemy import DeclarativeBase, FileAlchemy
+from flask_filealchemy import FileAlchemy
 
 
-class Author(DeclarativeBase):
+app = Flask(__name__)
+
+# configure Flask-SQLAlchemy
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+
+class Author(db.Model):
     __tablename__ = 'authors'
 
     slug = Column(String(255), primary_key=True)
     name = Column(String(255), nullable=False)
 
 
-class Book(DeclarativeBase):
+class Book(db.Model):
     __tablename__ = 'books'
 
     slug = Column(String(255), primary_key=True)
@@ -23,15 +34,14 @@ class Book(DeclarativeBase):
     bestseller = Column(Boolean, server_default='false')
 
 
-app = Flask(__name__)
+# configure Flask-FileAlchemy
+
 app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'data'
 )
+app.config['FILEALCHEMY_MODELS'] = (Author, Book)
 
-file_alchemy = FileAlchemy(app)
-file_alchemy.register_model(Author)
-file_alchemy.register_model(Book)
-file_alchemy.load_data()
+FileAlchemy(app, db).load_data()
 
 
 @app.route('/')
@@ -41,21 +51,19 @@ def hello():
 
 @app.route('/authors/<slug>')
 def author(slug):
-    with file_alchemy.make_session() as session:
-        author = session.query(Author).filter(Author.slug == slug).first()
+    author = db.session.query(Author).filter(Author.slug == slug).first()
 
-        if not author:
-            abort(404)
+    if not author:
+        abort(404)
 
-        return author.name
+    return author.name
 
 
 @app.route('/books/<slug>')
 def book(slug):
-    with file_alchemy.make_session() as session:
-        book = session.query(Book).filter(Book.slug == slug).first()
+    book = db.session.query(Book).filter(Book.slug == slug).first()
 
-        if not book:
-            abort(404)
+    if not book:
+        abort(404)
 
-        return book
+    return book.title
