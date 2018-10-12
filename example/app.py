@@ -55,7 +55,7 @@ def hello():
 
 @app.route('/authors/<slug>')
 def author(slug):
-    author = db.session.query(Author).filter(Author.slug == slug).first()
+    author = Author.query.filter(Author.slug == slug).first()
 
     if not author:
         abort(404)
@@ -65,7 +65,7 @@ def author(slug):
 
 @app.route('/books/<slug>')
 def book(slug):
-    book = db.session.query(Book).filter(Book.slug == slug).first()
+    book = Book.query.filter(Book.slug == slug).first()
 
     if not book:
         abort(404)
