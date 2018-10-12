@@ -62,7 +62,7 @@ setup(
     url='https://github.com/siddhantgoel/flask-filealchemy',
     packages=['flask_filealchemy'],
     keywords=['flask', 'sqlalchemy', 'static-sites'],
-    install_requires=('Flask', 'SQLAlchemy'),
+    install_requires=('Flask-SQLAlchemy>=2.1'),
     python_requires='>=3.5.0',
     cmdclass={
         'publish': PublishCommand
