@@ -48,7 +48,7 @@ def test_load_single_table(db, tmpdir):
     '''))
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir
+    db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
 
     FileAlchemy(app, db).load_tables()
 
@@ -73,7 +73,7 @@ def test_invalid_data(db, tmpdir):
         invalid.write(data)
 
         db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-        db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir
+        db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
 
         with pytest.raises(LoadError):
             FileAlchemy(app, db).load_tables()
@@ -132,7 +132,7 @@ def test_foreign_keys(db, tmpdir):
     '''))
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author, Book,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir
+    db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
 
     FileAlchemy(app, db).load_tables()
 
