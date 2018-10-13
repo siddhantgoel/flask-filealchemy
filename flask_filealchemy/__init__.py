@@ -1,7 +1,13 @@
 import os
 import warnings
+from collections import Mapping
 
+from sqlalchemy.exc import IntegrityError
 from yaml import load
+
+
+class LoadError(Exception):
+    pass
 
 
 class FileAlchemy:
@@ -21,33 +27,34 @@ class FileAlchemy:
     def load_tables(self):
         self.db.create_all()
 
-        for table in self.db.metadata.sorted_tables:
-            self._load_table(table)
-
-    def _load_table(self, table):
-        path = os.path.join(self._data_dir, table.name)
-
         try:
             session = self.db.session
 
-            for file_name in os.listdir(path):
-                obj = self._load_row(table, file_name)
-
-                if not obj:
-                    self._logger.warn('{}: unable to read {}'.format(
-                        self._log_prefix, file_name))
-                    continue
-
-                session.add(obj)
-                self._logger.info(
-                    '{}: imported {}'.format(self._log_prefix, file_name))
-
-            session.commit()
-        except Exception:
+            for table in self.db.metadata.sorted_tables:
+                self._load_table(session, table)
+        except LoadError:
             session.rollback()
             raise
+        else:
+            session.commit()
         finally:
             session.close()
+
+    def _load_table(self, session, table):
+        path = os.path.join(self._data_dir, table.name)
+
+        for file_name in os.listdir(path):
+            obj = self._load_row(table, file_name)
+
+            session.add(obj)
+
+            self._logger.info(
+                '{}: imported {}'.format(self._log_prefix, file_name))
+
+        try:
+            session.flush()
+        except IntegrityError as e:
+            raise LoadError(e)
 
     def _load_row(self, table, file_name):
         data = None
@@ -58,14 +65,19 @@ class FileAlchemy:
             with open(path) as fd:
                 data = fd.read()
         except IOError:
-            return None
+            raise LoadError(
+                '{}: could not open {}'.format(self._log_prefix, file_name))
 
         values = None
 
         try:
             values = load(data)
+
+            if not isinstance(values, Mapping):
+                raise ValueError()
         except ValueError:
-            return None
+            raise LoadError(
+                '{}: {} has invalid data'.format(self._log_prefix, file_name))
 
         kwargs = {
             column.name: values.get(column.name)
@@ -73,6 +85,10 @@ class FileAlchemy:
         }
 
         model_cls = self._model_for(table)
+
+        if not model_cls:
+            raise LoadError('{}: {} model not available'.format(
+                self._log_prefix, table.name))
 
         return model_cls(**kwargs)
 
