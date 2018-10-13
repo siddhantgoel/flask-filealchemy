@@ -26,6 +26,10 @@ class FileAlchemy:
             self._logger.warn(_fmt_log('no models found'))
 
     def load_tables(self):
+        if not os.path.isdir(self._data_dir):
+            raise LoadError(
+                _fmt_log('{} is not a directory'.format(self._data_dir)))
+
         self.db.create_all()
 
         try:

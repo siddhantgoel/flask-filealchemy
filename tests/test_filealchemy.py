@@ -22,6 +22,22 @@ def db(app):
     return SQLAlchemy(app)
 
 
+def test_invalid_directory(db):
+    app = db.get_app()
+
+    class Author(db.Model):
+        __tablename__ = 'authors'
+
+        slug = Column(String(255), primary_key=True)
+        name = Column(String(255), nullable=False)
+
+    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = '/does/not/exist/'
+
+    with pytest.raises(LoadError):
+        FileAlchemy(app, db).load_tables()
+
+
 def test_load_single_table(db, tmpdir):
     app = db.get_app()
 
