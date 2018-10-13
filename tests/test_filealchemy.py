@@ -1,4 +1,3 @@
-import os
 from textwrap import dedent
 
 import pytest
@@ -32,34 +31,28 @@ def test_load_single_table(db, tmpdir):
         slug = Column(String(255), primary_key=True)
         name = Column(String(255), nullable=False)
 
-    authors_dir = os.path.join(tmpdir, 'authors')
-    max_mustermann = os.path.join(authors_dir, 'max-mustermann.yml')
-    erika_mustermann = os.path.join(authors_dir, 'erika-mustermann.yml')
+    data_dir = tmpdir.mkdir('data_dir')
 
-    os.mkdir(authors_dir)
+    authors_dir = data_dir.mkdir('authors')
+    max_mustermann = authors_dir.join('max-mustermann.yml')
+    erika_mustermann = authors_dir.join('erika-mustermann.yml')
 
-    with open(max_mustermann, 'w') as fd:
-        fd.write(dedent('''
-            slug: max-mustermann
-            name: Max Mustermann
-        '''))
+    max_mustermann.write(dedent('''
+        slug: max-mustermann
+        name: Max Mustermann
+    '''))
 
-    with open(erika_mustermann, 'w') as fd:
-        fd.write(dedent('''
-            slug: erika-mustermann
-            name: Erika Mustermann
-        '''))
+    erika_mustermann.write(dedent('''
+        slug: erika-mustermann
+        name: Erika Mustermann
+    '''))
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = tmpdir
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir
 
     FileAlchemy(app, db).load_tables()
 
     assert Author.query.count() == 2
-
-    os.remove(max_mustermann)
-    os.remove(erika_mustermann)
-    os.rmdir(authors_dir)
 
 
 def test_invalid_data(db, tmpdir):
@@ -71,23 +64,19 @@ def test_invalid_data(db, tmpdir):
         slug = Column(String(255), primary_key=True)
         name = Column(String(255), nullable=False)
 
-    authors_dir = os.path.join(tmpdir, 'authors')
-    invalid = os.path.join(authors_dir, 'invalid.yml')
+    data_dir = tmpdir.mkdir('data_dir')
 
-    os.mkdir(authors_dir)
+    authors_dir = data_dir.mkdir('authors')
+    invalid = authors_dir.join('invalid.yml')
 
     for data in ('invalid', '[1, 2, 3]', 'key: value'):
-        with open(invalid, 'w') as fd:
-            fd.write(data)
+        invalid.write(data)
 
         db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-        db.app.config['FILEALCHEMY_DATA_DIR'] = tmpdir
+        db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir
 
         with pytest.raises(LoadError):
             FileAlchemy(app, db).load_tables()
-
-    os.remove(invalid)
-    os.rmdir(authors_dir)
 
 
 def test_foreign_keys(db, tmpdir):
@@ -110,52 +99,42 @@ def test_foreign_keys(db, tmpdir):
 
         author = relationship('Author', backref='books')
 
-    authors_dir = os.path.join(tmpdir, 'authors')
-    books_dir = os.path.join(tmpdir, 'books')
+    data_dir = tmpdir.mkdir('data_dir')
 
-    author = os.path.join(authors_dir, 'author.yml')
-    first_book = os.path.join(books_dir, 'first-book.yml')
-    second_book = os.path.join(books_dir, 'second-book.yml')
+    authors_dir = data_dir.mkdir('authors')
+    books_dir = data_dir.mkdir('books')
 
-    os.mkdir(authors_dir)
-    os.mkdir(books_dir)
+    author = authors_dir.join('author.yml')
+    first_book = books_dir.join('first-book.yml')
+    second_book = books_dir.join('second-book.yml')
 
-    with open(author, 'w') as fd:
-        fd.write(dedent('''
-            slug: max-mustermann
-            name: Max Mustermann
-        '''))
+    author.write(dedent('''
+        slug: max-mustermann
+        name: Max Mustermann
+    '''))
 
-    with open(first_book, 'w') as fd:
-        fd.write(dedent('''
-            slug: first-book
-            title: First Book
-            author_slug: max-mustermann
-            contents: |
-                First line.
-                Second line.
-        '''))
+    first_book.write(dedent('''
+        slug: first-book
+        title: First Book
+        author_slug: max-mustermann
+        contents: |
+            First line.
+            Second line.
+    '''))
 
-    with open(second_book, 'w') as fd:
-        fd.write(dedent('''
-            slug: second-book
-            title: Second Book
-            author_slug: max-mustermann
-            contents: |
-                First line.
-                Second line.
-        '''))
+    second_book.write(dedent('''
+        slug: second-book
+        title: Second Book
+        author_slug: max-mustermann
+        contents: |
+            First line.
+            Second line.
+    '''))
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author, Book,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = tmpdir
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir
 
     FileAlchemy(app, db).load_tables()
 
     assert Author.query.count() == 1
     assert Book.query.count() == 2
-
-    os.remove(first_book)
-    os.remove(second_book)
-    os.remove(author)
-    os.rmdir(authors_dir)
-    os.rmdir(books_dir)
