@@ -1,6 +1,12 @@
 Flask-FileAlchemy
 =================
 
+.. image:: https://badge.fury.io/py/flask-filealchemy.svg
+    :target: https://pypi.python.org/pypi/flask-filealchemy
+
+.. image:: https://travis-ci.org/siddhantgoel/flask-filealchemy.svg?branch=stable
+    :target: https://travis-ci.org/siddhantgoel/flask-filealchemy
+
 Flask-FileAlchemy lets you use YAML-formatted plain-text files as the data store
 for your Flask_ app.
 
