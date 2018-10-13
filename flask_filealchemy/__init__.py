@@ -1,5 +1,4 @@
 import os
-import warnings
 from collections import Mapping
 
 from sqlalchemy.exc import IntegrityError
@@ -10,9 +9,11 @@ class LoadError(Exception):
     pass
 
 
-class FileAlchemy:
-    _log_prefix = 'flask-filealchemy'
+def _fmt_log(message):
+    return 'flask-filealchemy: {}'.format(message)
 
+
+class FileAlchemy:
     def __init__(self, app, db):
         self.app = app
         self.db = db
@@ -22,7 +23,7 @@ class FileAlchemy:
         self._logger = self.app.logger
 
         if not self._models:
-            warnings.warn('{}: no models found'.format(self._log_prefix))
+            self._logger.warn(_fmt_log('no models found'))
 
     def load_tables(self):
         self.db.create_all()
@@ -48,8 +49,7 @@ class FileAlchemy:
 
             session.add(obj)
 
-            self._logger.info(
-                '{}: imported {}'.format(self._log_prefix, file_name))
+            self._logger.info(_fmt_log('imported {}'.format(file_name)))
 
         try:
             session.flush()
@@ -65,8 +65,7 @@ class FileAlchemy:
             with open(path) as fd:
                 data = fd.read()
         except IOError:
-            raise LoadError(
-                '{}: could not open {}'.format(self._log_prefix, file_name))
+            raise LoadError(_fmt_log('could not open {}'.format(file_name)))
 
         values = None
 
@@ -76,8 +75,7 @@ class FileAlchemy:
             if not isinstance(values, Mapping):
                 raise ValueError()
         except ValueError:
-            raise LoadError(
-                '{}: {} has invalid data'.format(self._log_prefix, file_name))
+            raise LoadError(_fmt_log('{} has invalid data'.format(file_name)))
 
         kwargs = {
             column.name: values.get(column.name)
@@ -87,8 +85,8 @@ class FileAlchemy:
         model_cls = self._model_for(table)
 
         if not model_cls:
-            raise LoadError('{}: {} model not available'.format(
-                self._log_prefix, table.name))
+            raise LoadError(
+                _fmt_log('{} model not available'.format(table.name)))
 
         return model_cls(**kwargs)
 
