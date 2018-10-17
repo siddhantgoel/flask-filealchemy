@@ -154,3 +154,32 @@ def test_foreign_keys(db, tmpdir):
 
     assert Author.query.count() == 1
     assert Book.query.count() == 2
+
+
+def test_load_from_all_file(db, tmpdir):
+    app = db.get_app()
+
+    class Author(db.Model):
+        __tablename__ = 'authors'
+
+        slug = Column(String(255), primary_key=True)
+        name = Column(String(255), nullable=False)
+
+    data_dir = tmpdir.mkdir('data_dir')
+
+    authors_dir = data_dir.mkdir('authors')
+    all_ = authors_dir.join('_all.yml')
+
+    all_.write(dedent('''
+        - slug: max-mustermann
+          name: Max Mustermann
+        - slug: erika-mustermann
+          name: Erika Mustermann
+    '''))
+
+    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
+
+    FileAlchemy(app, db).load_tables()
+
+    assert Author.query.count() == 2
