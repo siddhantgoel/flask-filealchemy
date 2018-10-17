@@ -1,5 +1,5 @@
-import os
 from collections.abc import Mapping, Sequence
+from pathlib import Path
 
 import yaml
 from sqlalchemy.exc import IntegrityError
@@ -13,9 +13,9 @@ def _fmt_log(message):
     return 'flask-filealchemy: {}'.format(message)
 
 
-def _parse_yaml_file(file_name):
+def _parse_yaml_file(file_):
     try:
-        with open(file_name) as fd:
+        with file_.open() as fd:
             data = fd.read()
 
         values = yaml.load(data)
@@ -27,9 +27,9 @@ def _parse_yaml_file(file_name):
         elif not isinstance(values, Mapping):
             raise ValueError()
     except IOError:
-        raise LoadError(_fmt_log('could not open {}'.format(file_name)))
+        raise LoadError(_fmt_log('could not open {}'.format(file_)))
     except ValueError:
-        raise LoadError(_fmt_log('{} contains invalid YAML'.format(file_name)))
+        raise LoadError(_fmt_log('{} contains invalid YAML'.format(file_)))
     else:
         return values
 
@@ -39,7 +39,7 @@ class FileAlchemy:
         self.app = app
         self.db = db
 
-        self._data_dir = self.app.config.get('FILEALCHEMY_DATA_DIR')
+        self._data_dir = Path(self.app.config.get('FILEALCHEMY_DATA_DIR'))
         self._models = self.app.config.get('FILEALCHEMY_MODELS')
         self._logger = self.app.logger
 
@@ -47,7 +47,7 @@ class FileAlchemy:
             self._logger.warn(_fmt_log('no models found'))
 
     def load_tables(self):
-        if not os.path.isdir(self._data_dir):
+        if not self._data_dir.exists():
             raise LoadError(
                 _fmt_log('{} is not a directory'.format(self._data_dir)))
 
@@ -78,9 +78,9 @@ class FileAlchemy:
             raise LoadError(e)
 
     def _extract_records(self, table):
-        all_ = os.path.join(self._data_dir, table.name, '_all.yml')
+        all_ = self._data_dir.joinpath(table.name).joinpath('_all.yml')
 
-        if os.path.isfile(all_):
+        if all_.is_file():
             records = self._load_table_from_all(table)
         else:
             records = self._load_table_from_files(table)
@@ -89,7 +89,7 @@ class FileAlchemy:
 
     def _load_table_from_all(self, table):
         values = _parse_yaml_file(
-            os.path.join(self._data_dir, table.name, '_all.yml')
+            self._data_dir.joinpath(table.name).joinpath('_all.yml')
         )
 
         return [
@@ -112,16 +112,17 @@ class FileAlchemy:
         return model_cls(**kwargs)
 
     def _load_table_from_files(self, table):
-        path = os.path.join(self._data_dir, table.name)
+        path = self._data_dir.joinpath(table.name)
 
         return [
-            self._load_row_from_file(table, file_name)
-            for file_name in os.listdir(path)
+            self._load_row_from_file(table, file_.name)
+            for file_ in path.iterdir()
+            if not file_.is_dir()
         ]
 
     def _load_row_from_file(self, table, file_name):
         values = _parse_yaml_file(
-            os.path.join(self._data_dir, table.name, file_name)
+            self._data_dir.joinpath(table.name).joinpath(file_name)
         )
 
         return self._record_from_mapping(table, values)
