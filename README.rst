@@ -7,8 +7,8 @@ Flask-FileAlchemy
 .. image:: https://travis-ci.org/siddhantgoel/flask-filealchemy.svg?branch=stable
     :target: https://travis-ci.org/siddhantgoel/flask-filealchemy
 
-Flask-FileAlchemy lets you use YAML-formatted plain-text files as the data store
-for your Flask_ app.
+:code:`Flask-FileAlchemy` lets you use YAML-formatted plain-text files as the
+data store for your Flask_ app.
 
 Installation
 ------------
@@ -47,7 +47,7 @@ checked in together and share history.
 
 Flask-FileAlchemy lets you enter your data in YAML formatted plain text files
 and loads them according to the SQLAlchemy_ models you've defined using
-`Flask-SQLAlchemy`_. This data is then put into whatever data store you're using
+`Flask-SQLAlchemy`_ This data is then put into whatever data store you're using
 (in-memory SQLite works best) and is then ready for your app to query however it
 pleases.
 
@@ -57,8 +57,7 @@ simplicity of static sites.
 Usage
 -----
 
-Define your data models using `Flask-SQLAlchemy`_ like you normally would, and
-configure Flask-FileAlchemy to read from a :code:`data/` directory.
+Define your data models using the standard (Flask-)SQLAlchemy API.
 
 .. code-block:: python
 
@@ -66,6 +65,7 @@ configure Flask-FileAlchemy to read from a :code:`data/` directory.
 
    # configure Flask-SQLAlchemy
    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+
    db = SQLAlchemy(app)
 
    class BlogPost(db.Model):
@@ -75,19 +75,13 @@ configure Flask-FileAlchemy to read from a :code:`data/` directory.
        title = Column(String(255), nullable=False)
        contents = Column(Text, nullable=False)
 
-   # configure Flask-FileAlchemy
-   app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
-       os.path.dirname(os.path.realpath(__file__)), 'data'
-   )
-   app.config['FILEALCHEMY_MODELS'] = (BlogPost,)
+Then, create a :code:`data/` directory somewhere on your disk (to keep things
+simple, it's recommended to have this directory in the application root). For
+each model you've defined, create a directory under this :code:`data/` directory
+with the same name as the :code:`__tablename__` attribute.
 
-   FileAlchemy(app, db).load_data()
-
-For each model you've defined, create a directory under the :code:`data/`
-directory with the same name as the :code:`__tablename__` attribute.
-
-In this example, we'll add the following contents into the
-:code:`data/blog_posts/first-post-ever.yml` file.
+In this example, we'll add the following contents to
+:code:`data/blog_posts/first-post-ever.yml`.
 
 .. code-block:: yaml
 
@@ -96,9 +90,40 @@ In this example, we'll add the following contents into the
    contents: |
       This blog post talks about how it's the first post ever!
 
-Flask-FileAlchemy then reads your data from the given directory, and stores them
-in the data store of your choice that you configured `Flask-SQLAlchemy`_ with
-(the preference being :code:`sqlite:///:memory:`).
+For "smaller" models which don't have more than 2-3 fields, Flask-FileAlchemy
+supports reading from an :code:`_all.yml` file. In such a case, instead of
+adding one file for every row, simply add all the rows in the :code:`_all.yml`
+file inside the table directory.
+
+In this example, this could look like the following.
+
+.. code-block:: yaml
+
+   - slug: first-post-ever
+     title: First post ever!
+     contents: This blog post talks about how it's the first post ever!
+   - slug: second-post-ever
+     title: second post ever!
+     contents: This blog post talks about how it's the second post ever!
+
+Finally, configure :code:`Flask-FileAlchemy` with your setup and ask it to load
+all your data.
+
+.. code-block:: python
+
+   # configure Flask-FileAlchemy
+   app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
+       os.path.dirname(os.path.realpath(__file__)), 'data'
+   )
+   app.config['FILEALCHEMY_MODELS'] = (BlogPost,)
+
+   # load tables
+   FileAlchemy(app, db).load_tables()
+
+:code:`Flask-FileAlchemy` then reads your data from the given directory, and
+stores them in the data store of your choice that you configured
+:code:`Flask-FileAlchemy` with (the preference being
+:code:`sqlite:///:memory:`).
 
 Please note that it's not possible to write to this database using
 :code:`db.session`. Well, technically it's allowed, but the changes your app
@@ -125,4 +150,4 @@ Please make sure you have Python 3 and pipenv_ installed.
 .. _Flask-SQLAlchemy: http://flask-sqlalchemy.pocoo.org/
 .. _Frozen-Flask: https://pythonhosted.org/Frozen-Flask/
 .. _pipenv: https://docs.pipenv.org/install/#installing-pipenv
-.. _SQLAlchemy: https://flask-admin.readthedocs.io/en/latest/
+.. _SQLAlchemy: https://www.sqlalchemy.org/
