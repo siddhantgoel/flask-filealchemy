@@ -15,7 +15,7 @@ cmarkgfm==0.4.2           # via readme-renderer
 docutils==0.14            # via readme-renderer
 flake8==3.6.0
 flask-sqlalchemy==2.3.2
-flask==1.0
+flask==1.0.2
 future==0.16.0            # via readme-renderer
 idna==2.7                 # via requests
 isort==4.3.4
