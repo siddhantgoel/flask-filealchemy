@@ -6,7 +6,7 @@ PyYAML==3.13
 SQLAlchemy==1.2.12
 
 # dev dependencies
-flake8==3.5.0
+flake8==3.6.0
 isort==4.3.4
 pytest==3.8.2
 twine==1.12.1
