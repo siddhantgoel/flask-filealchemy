@@ -1,7 +1,6 @@
 # project dependencies
 Flask==1.0
 Flask-SQLAlchemy==2.3.2
-pip-tools==3.1.0
 PyYAML==3.13
 SQLAlchemy==1.2.12
 
