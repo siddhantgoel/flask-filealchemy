@@ -34,7 +34,7 @@ pyflakes==2.0.0           # via flake8
 pygments==2.2.0           # via readme-renderer
 pytest==3.9.2
 pyyaml==3.13
-readme-renderer==22.0     # via twine
+readme-renderer==23.0     # via twine
 requests-toolbelt==0.8.0  # via twine
 requests==2.20.0          # via requests-toolbelt, twine
 six==1.11.0               # via bleach, more-itertools, pip-tools, pytest, readme-renderer
