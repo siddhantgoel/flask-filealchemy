@@ -1,12 +1,14 @@
 language: python
 
 python:
+    - "3.4"
     - "3.5"
     - "3.6"
 
 install:
     - pip install --upgrade pip pipenv
     - pipenv install --dev
+    - if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then pip install pathlib2; fi
 
 script:
     - pipenv run flake8
