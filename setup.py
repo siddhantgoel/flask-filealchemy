@@ -68,7 +68,7 @@ setup(
     install_requires=(
         'Flask-SQLAlchemy>=2.1',
     ),
-    python_requires='>=3.4.0',
+    python_requires='>=3.5.0',
     cmdclass={
         'publish': PublishCommand
     },
