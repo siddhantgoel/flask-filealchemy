@@ -1,4 +1,3 @@
-search: False
-
 requirements:
-    - requirements.in
+    - Pipfile
+    - Pipfile.lock

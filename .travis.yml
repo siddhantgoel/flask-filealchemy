@@ -1,16 +1,13 @@
 language: python
 
 python:
-    - "3.4"
     - "3.5"
     - "3.6"
 
 install:
-    - pip install --upgrade pip pip-tools
-    - pip-compile requirements.in > requirements.txt
-    - pip install -r requirements.txt
-    - pip install .
+    - pip install --upgrade pip pipenv
+    - pipenv install --dev
 
 script:
-    - flake8
-    - py.test tests/
+    - pipenv run flake8
+    - pipenv run py.test tests/
