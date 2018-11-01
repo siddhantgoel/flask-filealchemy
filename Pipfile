@@ -1,20 +1,32 @@
 [[source]]
+
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+
 [packages]
+
 Flask = "==1.0"
 Flask-SQLAlchemy = "==2.3.2"
 PyYAML = "==3.13"
-SQLAlchemy = "==1.2.12"
-flask-filealchemy = {editable = true, path = "."}
+SQLAlchemy = "==1.2.13"
+
 
 [dev-packages]
-"flake8" = "==3.6.0"
+
+flake8 = "==3.6.0"
 isort = "==4.3.4"
 pytest = "==3.9.3"
 twine = "==1.12.1"
 
+
 [requires]
+
 python_version = "3.7"
+
+
+[packages.flask-filealchemy]
+
+editable = true
+path = "."
