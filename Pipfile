@@ -11,7 +11,7 @@ Flask = "==1.0"
 Flask-SQLAlchemy = "==2.3.2"
 PyYAML = "==3.13"
 SQLAlchemy = "==1.2.14"
-
+ruamel-yaml = "==0.15.78"
 
 [dev-packages]
 

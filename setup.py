@@ -67,6 +67,7 @@ setup(
     keywords=['flask', 'sqlalchemy', 'yaml', 'plaintext', 'web'],
     install_requires=(
         'Flask-SQLAlchemy>=2.1',
+        'ruamel.yaml>=0.15',
     ),
     python_requires='>=3.4.0',
     cmdclass={

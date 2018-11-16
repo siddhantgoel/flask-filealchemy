@@ -1,7 +1,7 @@
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-import yaml
+from ruamel.yaml import YAML
 from sqlalchemy.exc import IntegrityError
 
 
@@ -18,7 +18,7 @@ def _parse_yaml_file(file_):
         with file_.open() as fd:
             data = fd.read()
 
-        values = yaml.load(data)
+        values = YAML(typ='safe').load(data)
 
         if isinstance(values, Sequence):
             for value in values:
