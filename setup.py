@@ -53,7 +53,7 @@ class PublishCommand(Command):
 
 setup(
     name='flask-filealchemy',
-    version='0.2.0',
+    version='0.3.0',
     description=(
         'YAML-formatted plain-text file based models for Flask backed by '
         'Flask-SQLAlchemy'
@@ -67,6 +67,7 @@ setup(
     keywords=['flask', 'sqlalchemy', 'yaml', 'plaintext', 'web'],
     install_requires=(
         'Flask-SQLAlchemy>=2.1',
+        'ruamel.yaml>=0.15',
     ),
     python_requires='>=3.4.0',
     cmdclass={
