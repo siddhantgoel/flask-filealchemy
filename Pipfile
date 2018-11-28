@@ -7,7 +7,7 @@ name = "pypi"
 
 [packages]
 
-Flask = "==1.0"
+Flask = "==1.0.2"
 Flask-SQLAlchemy = "==2.3.2"
 PyYAML = "==3.13"
 SQLAlchemy = "==1.2.14"
