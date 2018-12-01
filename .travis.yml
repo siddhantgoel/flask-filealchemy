@@ -7,10 +7,10 @@ python:
     - "3.7-dev"
 
 install:
-    - pip install --upgrade pip pipenv
-    - pipenv install --dev
-    - if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then pip install pathlib2; fi
+    - pip install -r requirements.txt
+    - pip install -r requirements.dev.txt
+    - pip install .
 
 script:
-    - pipenv run flake8
-    - pipenv run py.test tests/
+    - flake8
+    - py.test tests/
