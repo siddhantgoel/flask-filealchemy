@@ -135,13 +135,14 @@ Contributing
 
 Contributions are most welcome!
 
-Please make sure you have Python 3.4+ and pipenv_ installed.
+Please make sure you have Python 3.4+ installed.
 
 1. Git clone the repository -
    :code:`git clone https://github.com/siddhantgoel/flask-filealchemy`.
 
 2. Install the packages required for development -
-   :code:`pipenv install --dev`
+   :code:`pip install -r requirements.txt` and
+   :code:`pip install -r requirements.dev.txt`.
 
 3. That's basically it. You should now be able to run the test suite -
    :code:`py.test`.
@@ -150,4 +151,3 @@ Please make sure you have Python 3.4+ and pipenv_ installed.
 .. _Flask-SQLAlchemy: http://flask-sqlalchemy.pocoo.org/
 .. _Frozen-Flask: https://pythonhosted.org/Frozen-Flask/
 .. _SQLAlchemy: https://www.sqlalchemy.org/
-.. _pipenv: https://pipenv.readthedocs.io/en/latest/
