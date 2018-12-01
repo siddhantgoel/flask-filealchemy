@@ -1,3 +1,5 @@
+search: False
+
 requirements:
     - requirements.in
     - requirements.dev.in
