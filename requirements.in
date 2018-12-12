@@ -2,4 +2,4 @@ Flask==1.0.2
 Flask-SQLAlchemy==2.3.2
 PyYAML==3.13
 ruamel-yaml==0.15.78
-SQLAlchemy==1.2.14
+SQLAlchemy==1.2.15
