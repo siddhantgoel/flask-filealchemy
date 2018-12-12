@@ -12,5 +12,5 @@ jinja2==2.10              # via flask
 markupsafe==1.1.0         # via jinja2
 pyyaml==3.13
 ruamel-yaml==0.15.78
-sqlalchemy==1.2.14
+sqlalchemy==1.2.15
 werkzeug==0.14.1          # via flask
