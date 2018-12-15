@@ -21,7 +21,7 @@ py==1.7.0                 # via pytest
 pycodestyle==2.4.0        # via flake8
 pyflakes==2.0.0           # via flake8
 pygments==2.3.0           # via readme-renderer
-pytest==4.0.1
+pytest==4.0.2
 readme-renderer==24.0     # via twine
 requests-toolbelt==0.8.0  # via twine
 requests==2.21.0          # via requests-toolbelt, twine
