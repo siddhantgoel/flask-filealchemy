@@ -141,7 +141,6 @@ Please make sure you have Python 3.4+ installed.
    :code:`git clone https://github.com/siddhantgoel/flask-filealchemy`.
 
 2. Install the packages required for development -
-   :code:`pip install -r requirements.txt` and
    :code:`pip install -r requirements.dev.txt`.
 
 3. That's basically it. You should now be able to run the test suite -
