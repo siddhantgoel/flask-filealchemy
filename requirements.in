@@ -3,3 +3,4 @@ Flask-SQLAlchemy==2.3.2
 PyYAML==3.13
 ruamel-yaml==0.15.78
 SQLAlchemy==1.2.15
+watchdog==0.9.0

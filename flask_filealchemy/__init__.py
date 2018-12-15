@@ -3,6 +3,8 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 from sqlalchemy.exc import IntegrityError
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 
 class LoadError(Exception):
@@ -45,6 +47,25 @@ class FileAlchemy:
 
         if not self._models:
             self._logger.warn(_fmt_log('no models found'))
+
+        self._configure_watcher()
+
+    def _configure_watcher(self):
+        if not self.app.config['DEBUG']:
+            return
+
+        class ReloadTablesEventHandler(FileSystemEventHandler):
+            def on_any_event(*_):
+                self._logger.debug(_fmt_log('reloading all tables'))
+
+                self.db.drop_all()
+                self.load_tables()
+
+        observer = Observer()
+        observer.schedule(
+            ReloadTablesEventHandler(), self._data_dir, recursive=True
+        )
+        observer.start()
 
     def load_tables(self):
         if not self._data_dir.exists():
