@@ -68,6 +68,7 @@ setup(
     install_requires=(
         'Flask-SQLAlchemy>=2.1',
         'ruamel.yaml>=0.15',
+        'watchdog>=0.9',
     ),
     python_requires='>=3.4.0',
     cmdclass={
