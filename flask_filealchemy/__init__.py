@@ -3,8 +3,8 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 from sqlalchemy.exc import IntegrityError
-from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 
 class LoadError(Exception):
@@ -70,7 +70,8 @@ class FileAlchemy:
     def load_tables(self):
         if not self._data_dir.exists():
             raise LoadError(
-                _fmt_log('{} is not a directory'.format(self._data_dir)))
+                _fmt_log('{} is not a directory'.format(self._data_dir))
+            )
 
         self.db.create_all()
 
@@ -113,22 +114,19 @@ class FileAlchemy:
             self._data_dir.joinpath(table.name).joinpath('_all.yml')
         )
 
-        return [
-            self._record_from_mapping(table, value)
-            for value in values
-        ]
+        return [self._record_from_mapping(table, value) for value in values]
 
     def _record_from_mapping(self, table, values):
         kwargs = {
-            column.name: values.get(column.name)
-            for column in table.columns
+            column.name: values.get(column.name) for column in table.columns
         }
 
         model_cls = self._model_for(table)
 
         if not model_cls:
             raise LoadError(
-                _fmt_log('{} model not available'.format(table.name)))
+                _fmt_log('{} model not available'.format(table.name))
+            )
 
         return model_cls(**kwargs)
 

@@ -53,15 +53,23 @@ def test_load_single_table(db, tmpdir):
     max_mustermann = authors_dir.join('max-mustermann.yml')
     erika_mustermann = authors_dir.join('erika-mustermann.yml')
 
-    max_mustermann.write(dedent('''
-        slug: max-mustermann
-        name: Max Mustermann
-    '''))
+    max_mustermann.write(
+        dedent(
+            '''
+            slug: max-mustermann
+            name: Max Mustermann
+            '''
+        )
+    )
 
-    erika_mustermann.write(dedent('''
-        slug: erika-mustermann
-        name: Erika Mustermann
-    '''))
+    erika_mustermann.write(
+        dedent(
+            '''
+            slug: erika-mustermann
+            name: Erika Mustermann
+            '''
+        )
+    )
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author,)
     db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
@@ -109,8 +117,9 @@ def test_foreign_keys(db, tmpdir):
 
         slug = Column(String(255), primary_key=True)
         title = Column(String(255), nullable=False)
-        author_slug = Column(String(255), ForeignKey('authors.slug'),
-                             nullable=False)
+        author_slug = Column(
+            String(255), ForeignKey('authors.slug'), nullable=False
+        )
         contents = Column(Text, default=None)
 
         author = relationship('Author', backref='books')
@@ -124,30 +133,42 @@ def test_foreign_keys(db, tmpdir):
     first_book = books_dir.join('first-book.yml')
     second_book = books_dir.join('second-book.yml')
 
-    author.write(dedent('''
-        slug: max-mustermann
-        name: Max Mustermann
-    '''))
+    author.write(
+        dedent(
+            '''
+            slug: max-mustermann
+            name: Max Mustermann
+            '''
+        )
+    )
 
-    first_book.write(dedent('''
-        slug: first-book
-        title: First Book
-        author_slug: max-mustermann
-        contents: |
-            First line.
-            Second line.
-    '''))
+    first_book.write(
+        dedent(
+            '''
+            slug: first-book
+            title: First Book
+            author_slug: max-mustermann
+            contents: |
+                First line.
+                Second line.
+            '''
+        )
+    )
 
-    second_book.write(dedent('''
-        slug: second-book
-        title: Second Book
-        author_slug: max-mustermann
-        contents: |
-            First line.
-            Second line.
-    '''))
+    second_book.write(
+        dedent(
+            '''
+            slug: second-book
+            title: Second Book
+            author_slug: max-mustermann
+            contents: |
+                First line.
+                Second line.
+            '''
+        )
+    )
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Author, Book,)
+    db.app.config['FILEALCHEMY_MODELS'] = (Author, Book)
     db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
 
     FileAlchemy(app, db).load_tables()
@@ -170,12 +191,16 @@ def test_load_from_all_file(db, tmpdir):
     authors_dir = data_dir.mkdir('authors')
     all_ = authors_dir.join('_all.yml')
 
-    all_.write(dedent('''
-        - slug: max-mustermann
-          name: Max Mustermann
-        - slug: erika-mustermann
-          name: Erika Mustermann
-    '''))
+    all_.write(
+        dedent(
+            '''
+            - slug: max-mustermann
+              name: Max Mustermann
+            - slug: erika-mustermann
+              name: Erika Mustermann
+            '''
+        )
+    )
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author,)
     db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
