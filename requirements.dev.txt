@@ -13,7 +13,7 @@ click==7.0                # via flask
 docutils==0.14            # via readme-renderer
 entrypoints==0.3          # via flake8
 flake8==3.7.7
-flask-sqlalchemy==2.3.2
+flask-sqlalchemy==2.4.0
 flask==1.0.2
 idna==2.8                 # via requests
 isort==4.3.17
