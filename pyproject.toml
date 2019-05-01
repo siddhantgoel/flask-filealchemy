@@ -10,7 +10,6 @@ classifiers = [
     "Environment :: Web Environment",
     "Framework :: Flask",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
@@ -20,7 +19,7 @@ keywords = ["flask", "sqlalchemy", "yaml", "plaintext", "web"]
 url = "https://github.com/siddhantgoel/flask-filealchemy"
 
 [tool.poetry.dependencies]
-python = "^3.4"
+python = "^3.5"
 flask = "^1.0"
 flask-sqlalchemy = "^2.4"
 ruamel-yaml = "^0.15.94"
