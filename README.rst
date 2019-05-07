@@ -135,18 +135,19 @@ Contributing
 
 Contributions are most welcome!
 
-Please make sure you have Python 3.4+ installed.
+Please make sure you have Python 3.4+ and Poetry_ installed.
 
 1. Git clone the repository -
    :code:`git clone https://github.com/siddhantgoel/flask-filealchemy`.
 
 2. Install the packages required for development -
-   :code:`pip install -r requirements.dev.txt`.
+   :code:`poetry install`.
 
 3. That's basically it. You should now be able to run the test suite -
-   :code:`py.test`.
+   :code:`poetry run py.test`.
 
 .. _Flask: http://flask.pocoo.org
 .. _Flask-SQLAlchemy: http://flask-sqlalchemy.pocoo.org/
 .. _Frozen-Flask: https://pythonhosted.org/Frozen-Flask/
+.. _Poetry: https://poetry.eustace.io/
 .. _SQLAlchemy: https://www.sqlalchemy.org/
