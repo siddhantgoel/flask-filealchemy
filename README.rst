@@ -135,7 +135,7 @@ Contributing
 
 Contributions are most welcome!
 
-Please make sure you have Python 3.4+ and Poetry_ installed.
+Please make sure you have Python 3.5+ and Poetry_ installed.
 
 1. Git clone the repository -
    :code:`git clone https://github.com/siddhantgoel/flask-filealchemy`.
