@@ -30,8 +30,9 @@ class Book(db.Model):
 
     slug = Column(String(255), primary_key=True)
     title = Column(String(255), nullable=False)
-    author_slug = Column(String(255), ForeignKey('authors.slug'),
-                         nullable=False)
+    author_slug = Column(
+        String(255), ForeignKey('authors.slug'), nullable=False
+    )
     bestseller = Column(Boolean, server_default='false')
     contents = Column(Text, default=None)
 
