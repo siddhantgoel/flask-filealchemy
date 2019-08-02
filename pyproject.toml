@@ -31,6 +31,7 @@ flask = "^1.0"
 isort = "^4.3"
 pytest = "^4.4"
 black = {version = "^18.3-alpha.0",allows-prereleases = true,python = "^3.6"}
+mypy = "^0.720.0"
 
 [tool.black]
 line-length = 79
