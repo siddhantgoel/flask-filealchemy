@@ -23,7 +23,6 @@ python = "^3.5"
 flask = "^1.0"
 flask-sqlalchemy = "^2.4"
 ruamel-yaml = "^0.15.94"
-watchdog = "^0.9.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
