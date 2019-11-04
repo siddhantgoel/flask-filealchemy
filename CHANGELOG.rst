@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+v0.3.1
+------
+- Update package metadata
+- Minor cleanups
+
 v0.3.0
 ------
 - Use :code:`ruamel.yaml` for proper unicode handling
