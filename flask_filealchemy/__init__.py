@@ -103,7 +103,9 @@ class FileAlchemy:
             column.name: values.get(column.name) for column in table.columns
         }
 
-        model_cls = self._model_for(table)
+        model_cls = next(
+            cls for cls in self._models if cls.__tablename__ == table.name
+        )
 
         if not model_cls:
             raise LoadError(
@@ -127,8 +129,3 @@ class FileAlchemy:
         )
 
         return self._record_from_mapping(table, values)
-
-    def _model_for(self, table):
-        for model_cls in self._models:
-            if model_cls.__tablename__ == table.name:
-                return model_cls
