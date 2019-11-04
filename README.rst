@@ -7,6 +7,9 @@ Flask-FileAlchemy
 .. image:: https://badge.fury.io/py/flask-filealchemy.svg
     :target: https://pypi.python.org/pypi/flask-filealchemy
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+
 :code:`Flask-FileAlchemy` lets you use YAML-formatted plain-text files as the
 data store for your Flask_ app.
 
