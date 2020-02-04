@@ -20,7 +20,6 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
 ]
 keywords = ["flask", "sqlalchemy", "yaml", "plaintext", "web"]
-url = "https://github.com/siddhantgoel/flask-filealchemy"
 repository = "https://github.com/siddhantgoel/flask-filealchemy"
 documentation = "https://github.com/siddhantgoel/flask-filealchemy"
 
