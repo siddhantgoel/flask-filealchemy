@@ -6,8 +6,8 @@ from sqlalchemy import Column, String
 from flask_filealchemy.loaders import (
     BaseLoader,
     loader_for,
-    YAMLSingleFileLoader,
     YAMLDirectoryLoader,
+    YAMLSingleFileLoader,
 )
 
 
