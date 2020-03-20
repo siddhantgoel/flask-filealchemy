@@ -34,16 +34,14 @@ class FileAlchemy:
             for table in self.db.metadata.sorted_tables:
                 model = self.model_for(table)
 
+                loader = loader_for(self.data_dir, table)
+
+                if not loader:
+                    raise LoadError(
+                        _fmt_log('no loader found for {}'.format(table.name))
+                    )
+
                 try:
-                    loader = loader_for(self.data_dir, table)
-
-                    if not loader:
-                        raise LoadError(
-                            _fmt_log(
-                                'no loader found for {}'.format(table.name)
-                            )
-                        )
-
                     for record in loader.extract_records(model):
                         session.add(record)
 
