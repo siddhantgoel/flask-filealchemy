@@ -10,6 +10,9 @@ class InvalidLoaderError(Exception):
 
 
 class BaseLoader:
+    """Base class for all Loader classes.
+    """
+
     def __init__(self, data_dir: Path, table: Table):
         self.data_dir = data_dir
         self.table = table
@@ -24,6 +27,14 @@ class BaseLoader:
 
 
 class YAMLSingleFileLoader(BaseLoader):
+    """YAMLSingleFileLoader is used to load records from directories which
+    contain a `_all.yml` file.
+
+    Please note that while the existence of this file is a necessary
+    requirement, this loader would still be chosen if the directory contains
+    other files.
+    """
+
     @property
     def data_path(self):
         return self.data_dir.joinpath(self.table.name).joinpath('_all.yml')
@@ -47,6 +58,10 @@ class YAMLSingleFileLoader(BaseLoader):
 
 
 class YAMLDirectoryLoader(BaseLoader):
+    """YAMLDirectoryLoader is used to load records from directories which
+    contain only YAML-formatted files.
+    """
+
     @property
     def data_path(self):
         return self.data_dir.joinpath(self.table.name)
