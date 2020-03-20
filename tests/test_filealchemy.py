@@ -1,28 +1,13 @@
 from textwrap import dedent
 
 import pytest
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, ForeignKey, String, Text
 from sqlalchemy.orm import relationship
 
 from flask_filealchemy import FileAlchemy, LoadError
 
 
-@pytest.fixture
-def app():
-    return Flask(__name__)
-
-
-@pytest.fixture
-def db(app):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    return SQLAlchemy(app)
-
-
-def test_invalid_directory(db):
+def test_directory_does_not_exist(db):
     app = db.get_app()
 
     class Author(db.Model):
@@ -33,6 +18,25 @@ def test_invalid_directory(db):
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author,)
     db.app.config['FILEALCHEMY_DATA_DIR'] = '/does/not/exist/'
+
+    with pytest.raises(LoadError):
+        FileAlchemy(app, db).load_tables()
+
+
+def test_invalid_directory(db, tmpdir):
+    app = db.get_app()
+
+    class Author(db.Model):
+        __tablename__ = 'authors'
+
+        slug = Column(String(255), primary_key=True)
+        name = Column(String(255), nullable=False)
+
+    file_ = tmpdir.join('file.yml')
+    file_.write('does not matter')
+
+    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = file_.strpath
 
     with pytest.raises(LoadError):
         FileAlchemy(app, db).load_tables()
@@ -72,7 +76,7 @@ def test_load_single_table(db, tmpdir):
     )
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
@@ -97,7 +101,7 @@ def test_invalid_data(db, tmpdir):
         invalid.write(data)
 
         db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-        db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
+        db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
         with pytest.raises(LoadError):
             FileAlchemy(app, db).load_tables()
@@ -169,7 +173,7 @@ def test_foreign_keys(db, tmpdir):
     )
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author, Book)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
@@ -203,7 +207,7 @@ def test_load_from_all_file(db, tmpdir):
     )
 
     db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = str(data_dir)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
