@@ -83,8 +83,10 @@ class YAMLDirectoryLoader(BaseLoader):
             yield model(**kwargs)
 
     def validate(self):
+        extensions = ('.yml', '.yaml', '.YML', '.YAML')
+
         for file_ in self.data_path.iterdir():
-            if not file_.name.endswith('.yml'):
+            if not any(ext for ext in extensions if file_.name.endswith(ext)):
                 raise InvalidLoaderError()
 
 
