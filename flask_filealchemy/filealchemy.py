@@ -37,6 +37,13 @@ class FileAlchemy:
                 try:
                     loader = loader_for(self.data_dir, table)
 
+                    if not loader:
+                        raise LoadError(
+                            _fmt_log(
+                                'no loader found for {}'.format(table.name)
+                            )
+                        )
+
                     for record in loader.extract_records(model):
                         session.add(record)
 
