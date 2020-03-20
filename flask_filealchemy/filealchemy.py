@@ -34,11 +34,6 @@ class FileAlchemy:
             for table in self.db.metadata.sorted_tables:
                 model = self.model_for(table)
 
-                if not model:
-                    raise LoadError(
-                        _fmt_log('no model found for {}'.format(table.name))
-                    )
-
                 try:
                     loader = loader_for(self.data_dir, table)
 
