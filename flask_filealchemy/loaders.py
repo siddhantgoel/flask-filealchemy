@@ -62,6 +62,8 @@ class YAMLDirectoryLoader(BaseLoader):
     contain only YAML-formatted files.
     """
 
+    extensions = ('.yml', '.yaml', '.YML', '.YAML')
+
     @property
     def data_path(self):
         return self.data_dir.joinpath(self.table.name)
@@ -83,10 +85,10 @@ class YAMLDirectoryLoader(BaseLoader):
             yield model(**kwargs)
 
     def validate(self):
-        extensions = ('.yml', '.yaml', '.YML', '.YAML')
-
         for file_ in self.data_path.iterdir():
-            if not any(ext for ext in extensions if file_.name.endswith(ext)):
+            if not any(
+                ext for ext in self.extensions if file_.name.endswith(ext)
+            ):
                 raise InvalidLoaderError()
 
 

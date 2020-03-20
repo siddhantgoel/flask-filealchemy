@@ -36,11 +36,55 @@ def test_model_for_single_file(db, tmpdir):
     )
 
 
-def test_model_for_directory(db, tmpdir):
+def test_model_for_directory_extra_files(db, tmpdir):
+    authors = tmpdir.mkdir('authors')
+
+    authors.join('invalid.md').write('does-not-matter')
+    authors.join('valid.yml').write('does-not-matter')
+
+    class Author(db.Model):
+        __tablename__ = 'authors'
+
+        slug = Column(String(255), primary_key=True)
+        name = Column(String(255), nullable=False)
+
+    assert len(db.metadata.sorted_tables) == 1
+    assert db.metadata.sorted_tables[0].name == 'authors'
+
+    author_table = db.metadata.sorted_tables[0]
+
+    assert not loader_for(Path(tmpdir.strpath), author_table)
+
+
+def test_model_for_directory_normal(db, tmpdir):
     authors = tmpdir.mkdir('authors')
 
     authors.join('first.yml').write('does-not-matter')
     authors.join('second.yml').write('does-not-matter')
+
+    class Author(db.Model):
+        __tablename__ = 'authors'
+
+        slug = Column(String(255), primary_key=True)
+        name = Column(String(255), nullable=False)
+
+    assert len(db.metadata.sorted_tables) == 1
+    assert db.metadata.sorted_tables[0].name == 'authors'
+
+    author_table = db.metadata.sorted_tables[0]
+
+    assert isinstance(
+        loader_for(Path(tmpdir.strpath), author_table), YAMLDirectoryLoader
+    )
+
+
+def test_model_for_directory_extra_extensions(db, tmpdir):
+    authors = tmpdir.mkdir('authors')
+
+    for index, extension in enumerate(YAMLDirectoryLoader.extensions):
+        authors.join('authors-{}.{}'.format(index, extension)).write(
+            'does-not-matter'
+        )
 
     class Author(db.Model):
         __tablename__ = 'authors'
