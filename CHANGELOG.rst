@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+v0.4.0
+------
+- Refactor
+- Enforce YAML file extensions when loading records from multiple files in a directory
+
 v0.3.1
 ------
 - Update package metadata
