@@ -34,6 +34,11 @@ class FileAlchemy:
             for table in self.db.metadata.sorted_tables:
                 model = self.model_for(table)
 
+                if not model:
+                    raise LoadError(
+                        _fmt_log('no model found for {}'.format(table.name))
+                    )
+
                 loader = loader_for(self.data_dir, table)
 
                 if not loader:
@@ -67,6 +72,6 @@ class FileAlchemy:
         return self.data_dir.joinpath(table.name)
 
     def model_for(self, table: Table):
-        return next(
-            model for model in self.models if model.__tablename__ == table.name
-        )
+        for model in self.models:
+            if model.__tablename__ == table.name:
+                return model

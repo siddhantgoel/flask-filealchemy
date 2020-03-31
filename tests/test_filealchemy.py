@@ -42,6 +42,36 @@ def test_invalid_directory(db, tmpdir):
         FileAlchemy(app, db).load_tables()
 
 
+def test_model_not_found(db, tmpdir):
+    app = db.get_app()
+
+    class Author(db.Model):
+        __tablename__ = 'authors'
+
+        slug = Column(String(32), primary_key=True)
+
+    class Book(db.Model):
+        __tablename__ = 'books'
+
+        slug = Column(String(32), primary_key=True)
+
+    data_dir = tmpdir.mkdir('data_dir')
+
+    authors_dir = data_dir.mkdir('authors')
+    max_mustermann = authors_dir.join('max-mustermann.yml')
+    max_mustermann.write('slug: max-mustermann')
+
+    books_dir = data_dir.mkdir('books')
+    muster_book = books_dir.join('muster-book.yml')
+    muster_book.write('slug: muster-book')
+
+    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+
+    with pytest.raises(LoadError, match='no model found'):
+        FileAlchemy(app, db).load_tables()
+
+
 def test_load_single_table(db, tmpdir):
     app = db.get_app()
 
