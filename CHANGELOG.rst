@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v0.4.1
+------
+- Check for missing models when loading data
+
 v0.4.0
 ------
 - Refactor
