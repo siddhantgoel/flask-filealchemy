@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-filealchemy"
-version = "0.4.1"
+version = "0.5.0"
 description = "YAML-formatted plain-text file based models for Flask backed by Flask-SQLAlchemy"
 readme = "README.rst"
 authors = ["Siddhant Goel <me@sgoel.org>"]
