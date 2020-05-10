@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v0.5.0
+------
+- Support Python 3.8
+
 v0.4.1
 ------
 - Check for missing models when loading data
