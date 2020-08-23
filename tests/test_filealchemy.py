@@ -72,7 +72,7 @@ def test_model_not_found(db, tmpdir):
         FileAlchemy(app, db).load_tables()
 
 
-def test_load_single_table(db, tmpdir):
+def test_load_yaml_single_table(db, tmpdir):
     app = db.get_app()
 
     class Author(db.Model):
@@ -137,7 +137,7 @@ def test_invalid_data(db, tmpdir):
             FileAlchemy(app, db).load_tables()
 
 
-def test_foreign_keys(db, tmpdir):
+def test_yaml_foreign_keys(db, tmpdir):
     app = db.get_app()
 
     class Author(db.Model):
@@ -211,7 +211,7 @@ def test_foreign_keys(db, tmpdir):
     assert Book.query.count() == 2
 
 
-def test_load_from_all_file(db, tmpdir):
+def test_yaml_load_from_all_file(db, tmpdir):
     app = db.get_app()
 
     class Author(db.Model):
@@ -242,3 +242,61 @@ def test_load_from_all_file(db, tmpdir):
     FileAlchemy(app, db).load_tables()
 
     assert Author.query.count() == 2
+
+
+def test_load_markdown(db, tmpdir):
+    app = db.get_app()
+
+    class Book(db.Model):
+        __tablename__ = 'books'
+
+        slug = Column(String(255), primary_key=True)
+        title = Column(String(255), nullable=False)
+        content = Column(Text, default=None)
+
+    data_dir = tmpdir.mkdir('data_dir')
+
+    authors_dir = data_dir.mkdir('books')
+    first_book = authors_dir.join('first.md')
+    second_book = authors_dir.join('second.md')
+
+    first_book.write(
+        dedent(
+            '''
+            ---
+            slug: first
+            title: First book
+            ---
+
+            This is the first book!
+            '''
+        )
+    )
+
+    second_book.write(
+        dedent(
+            '''
+            ---
+            slug: second
+            title: Second book
+            ---
+
+            This is the second book!
+            '''
+        )
+    )
+
+    db.app.config['FILEALCHEMY_MODELS'] = (Book,)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+
+    FileAlchemy(app, db).load_tables()
+
+    assert Book.query.count() == 2
+
+    first = Book.query.filter_by(slug='first').one()
+    assert first is not None
+    assert first.content == 'This is the first book!'
+
+    second = Book.query.filter_by(slug='second').one()
+    assert second is not None
+    assert second.content == 'This is the second book!'
