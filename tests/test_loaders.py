@@ -7,7 +7,7 @@ from flask_filealchemy.loaders import (
     BaseLoader,
     loader_for,
     YAMLDirectoryLoader,
-    YAMLSingleFileLoader,
+    YAMLFileLoader,
 )
 
 
@@ -32,7 +32,7 @@ def test_model_for_single_file(db, tmpdir):
     author_table = db.metadata.sorted_tables[0]
 
     assert isinstance(
-        loader_for(Path(tmpdir.strpath), author_table), YAMLSingleFileLoader
+        loader_for(Path(tmpdir.strpath), author_table), YAMLFileLoader
     )
 
 

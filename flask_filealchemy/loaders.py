@@ -28,9 +28,9 @@ class BaseLoader:
         raise NotImplementedError()
 
 
-class YAMLSingleFileLoader(BaseLoader):
+class YAMLFileLoader(BaseLoader):
     """
-    YAMLSingleFileLoader is used to load records from directories which contain
+    YAMLFileLoader is used to load records from directories which contain
     a `_all.yml` file.
 
     Please note that while the existence of this file is a necessary
@@ -135,7 +135,7 @@ class MarkdownFrontmatterDirectoryLoader(
 def loader_for(data_dir: Path, table: Table):
     for cls in (
         MarkdownFrontmatterDirectoryLoader,
-        YAMLSingleFileLoader,
+        YAMLFileLoader,
         YAMLDirectoryLoader,
     ):
         try:
