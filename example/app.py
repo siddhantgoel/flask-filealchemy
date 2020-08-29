@@ -34,7 +34,7 @@ class Book(db.Model):
         String(255), ForeignKey('authors.slug'), nullable=False
     )
     bestseller = Column(Boolean, server_default='false')
-    contents = Column(Text, default=None)
+    content = Column(Text, default=None)
 
     author = relationship('Author', backref='books')
 
@@ -71,4 +71,4 @@ def book(slug):
     if not book:
         abort(404)
 
-    return book.contents
+    return book.content
