@@ -60,7 +60,11 @@ simplicity of static sites.
 Usage
 -----
 
-Define your data models using the standard (Flask-)SQLAlchemy API.
+1. Define data models
+~~~~~~~~~~~~~~~~~~~~~
+
+Define your data models using the standard (Flask-)SQLAlchemy API. As an
+example, a :code:`BlogPost` model can defined as follows.
 
 .. code-block:: python
 
@@ -78,13 +82,25 @@ Define your data models using the standard (Flask-)SQLAlchemy API.
        title = Column(String(255), nullable=False)
        contents = Column(Text, nullable=False)
 
-Then, create a :code:`data/` directory somewhere on your disk (to keep things
+2. Add some data
+~~~~~~~~~~~~~~~~
+
+Next, create a :code:`data/` directory somewhere on your disk (to keep things
 simple, it's recommended to have this directory in the application root). For
 each model you've defined, create a directory under this :code:`data/` directory
 with the same name as the :code:`__tablename__` attribute.
 
-In this example, we'll add the following contents to
-:code:`data/blog_posts/first-post-ever.yml`.
+We currently support three different ways to define data.
+
+1. Multiple YAML files
+++++++++++++++++++++++
+
+The first way is to have multiple YAML files inside the
+:code:`data/<__tablename__>/` directory, each file corresponding to one record.
+
+In case of the "blog" example, we can define a new :code:`BlogPost` record by
+creating the file :code:`data/blog_posts/first-post-ever.yml` with the following
+contents.
 
 .. code-block:: yaml
 
@@ -93,12 +109,17 @@ In this example, we'll add the following contents to
    contents: |
       This blog post talks about how it's the first post ever!
 
+Adding more such files in the same directory would result in more records.
+
+2. Single YAML file
++++++++++++++++++++
+
 For "smaller" models which don't have more than 2-3 fields, Flask-FileAlchemy
 supports reading from an :code:`_all.yml` file. In such a case, instead of
 adding one file for every row, simply add all the rows in the :code:`_all.yml`
 file inside the table directory.
 
-In this example, this could look like the following.
+For the "blog" example, this would look like the following.
 
 .. code-block:: yaml
 
@@ -108,6 +129,28 @@ In this example, this could look like the following.
    - slug: second-post-ever
      title: second post ever!
      contents: This blog post talks about how it's the second post ever!
+
+3. Markdown/Frontmatter
++++++++++++++++++++++++
+
+It's also possible to load data from Jekyll-style Markdown files containing
+Frontmatter metadata.
+
+In case of the blog example, it's possible to create a new :code:`BlogPost`
+record by defining a :code:`data/blog_posts/first-post-ever.md` file with the
+following contents.
+
+.. code-block:: markdown
+
+   ---
+   slug: first-post-ever
+   title: First post ever!
+   ---
+
+   This blog post talks about how it's the first post ever!
+
+3. Configure and load
+~~~~~~~~~~~~~~~~~~~~~
 
 Finally, configure :code:`Flask-FileAlchemy` with your setup and ask it to load
 all your data.
