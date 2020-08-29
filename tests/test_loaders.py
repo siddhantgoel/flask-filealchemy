@@ -16,7 +16,7 @@ def test_base_loader_does_not_validate():
         BaseLoader(None, None)
 
 
-def test_model_for_single_file(db, tmpdir):
+def test_yaml_file_loader(db, tmpdir):
     authors = tmpdir.mkdir('authors')
     authors.join('_all.yml').write('does-not-matter')
 
@@ -36,7 +36,7 @@ def test_model_for_single_file(db, tmpdir):
     )
 
 
-def test_model_for_directory_extra_files(db, tmpdir):
+def test_no_loader_found(db, tmpdir):
     authors = tmpdir.mkdir('authors')
 
     authors.join('invalid.md').write('does-not-matter')
@@ -56,7 +56,7 @@ def test_model_for_directory_extra_files(db, tmpdir):
     assert not loader_for(Path(tmpdir.strpath), author_table)
 
 
-def test_model_for_directory_normal(db, tmpdir):
+def test_yaml_directory_loader(db, tmpdir):
     authors = tmpdir.mkdir('authors')
 
     authors.join('first.yml').write('does-not-matter')
@@ -78,7 +78,7 @@ def test_model_for_directory_normal(db, tmpdir):
     )
 
 
-def test_model_for_directory_extra_extensions(db, tmpdir):
+def test_yaml_directory_loader_with_extra_extensions(db, tmpdir):
     authors = tmpdir.mkdir('authors')
 
     for index, extension in enumerate(YAMLDirectoryLoader.extensions):
