@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v0.6.1
+- Allow non-required model fields in Markdown loader
+
 ## v0.6.0
 - Support Markdown-Frontmatter formatted content
 
