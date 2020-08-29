@@ -2,8 +2,8 @@
 
 ![](https://github.com/siddhantgoel/flask-filealchemy/workflows/flask-filealchemy/badge.svg) ![](https://badge.fury.io/py/flask-filealchemy.svg)
 
-`Flask-FileAlchemy` lets you use YAML-formatted plain-text files as the data
-store for your [Flask] app.
+`Flask-FileAlchemy` is a [Flask] extension that lets you use Markdown or YAML
+formatted plain-text files as the main data store for your apps.
 
 ## Installation
 
@@ -13,9 +13,9 @@ $ pip install flask-filealchemy
 
 ## Background
 
-While there are better data stores to use in production than plain-text, the
-constraints on data stores for applications that only have to run locally are
-much more relaxed. For such applications, it's normally OK to sacrifice on
+The constraints on which data-store to use for applications that only have to
+run locally are quite relaxed as compared to the ones that have to serve
+production traffic. For such applications, it's normally OK to sacrifice on
 performance for ease of use.
 
 One very strong use case here is generating static sites. While you can use
@@ -38,11 +38,11 @@ Plain text files have the advantage of being much easier to handle for a human.
 Plus, you can version control them so your application data and code are both
 checked in together and share history.
 
-Flask-FileAlchemy lets you enter your data in YAML formatted plain text files
-and loads them according to the [SQLAlchemy] models you've defined using
-[Flask-SQLAlchemy] This data is then put into whatever data store you're using
-(in-memory SQLite works best) and is then ready for your app to query however it
-pleases.
+Flask-FileAlchemy lets you enter your data in Markdown or YAML formatted plain
+text files and loads them according to the [SQLAlchemy] models you've defined
+using [Flask-SQLAlchemy] This data is then put into whatever data store you're
+using (in-memory SQLite works best) and is then ready for your app to query
+however it pleases.
 
 This lets you retain the comfort of dynamic sites without compromising on the
 simplicity of static sites.
@@ -171,8 +171,8 @@ Please make sure you have Python 3.5+ and [Poetry] installed.
 3. That's basically it. You should now be able to run the test suite -
    `poetry run py.test`.
 
-[Flask]: http://flask.pocoo.org
-[Flask-SQLAlchemy]: http://flask-sqlalchemy.pocoo.org/
+[Flask]: https://flask.palletsprojects.com/
+[Flask-SQLAlchemy]: https://flask-sqlalchemy.palletsprojects.com/
 [Frozen-Flask]: https://pythonhosted.org/Frozen-Flask/
-[Poetry]: https://poetry.eustace.io/
+[Poetry]: https://python-poetry.org/
 [SQLAlchemy]: https://www.sqlalchemy.org/
