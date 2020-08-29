@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v0.6.0
+------
+- Support Markdown-Frontmatter formatted content
+
 v0.5.0
 ------
 - Support Python 3.8
