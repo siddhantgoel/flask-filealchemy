@@ -300,3 +300,47 @@ def test_load_markdown(db, tmpdir):
     second = Book.query.filter_by(slug='second').one()
     assert second is not None
     assert second.content == 'This is the second book!'
+
+
+def test_load_markdown_optional_fields(db, tmpdir):
+    app = db.get_app()
+
+    class Book(db.Model):
+        __tablename__ = 'books'
+
+        slug = Column(String(255), primary_key=True)
+        title = Column(String(255), nullable=False)
+        category = Column(String(255), default=None)
+        content = Column(Text, default=None)
+
+    data_dir = tmpdir.mkdir('data_dir')
+
+    authors_dir = data_dir.mkdir('books')
+    example = authors_dir.join('example.md')
+
+    example.write(
+        dedent(
+            '''
+            ---
+            slug: example
+            title: Example
+            ---
+
+            This is an example book.
+            '''
+        )
+    )
+
+    db.app.config['FILEALCHEMY_MODELS'] = (Book,)
+    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+
+    FileAlchemy(app, db).load_tables()
+
+    assert Book.query.count() == 1
+
+    book = Book.query.first()
+
+    assert book is not None
+    assert book.title == 'Example'
+    assert book.slug == 'example'
+    assert book.category is None

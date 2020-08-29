@@ -127,7 +127,7 @@ class MarkdownFrontmatterDirectoryLoader(
             )
 
             kwargs = {
-                column.name: values[column.name]
+                column.name: values.get(column.name)
                 for column in self.table.columns
                 if column.name != self.content_column_name
             }
