@@ -1,3 +1,4 @@
+import codecs
 from collections.abc import Mapping, Sequence
 
 from ruamel.yaml import YAML
@@ -11,9 +12,9 @@ class LoadError(Exception):
     pass
 
 
-def parse_yaml_file(file_):
+def parse_yaml_file(file_: str):
     try:
-        with file_.open() as fd:
+        with codecs.open(file_) as fd:
             data = fd.read()
 
         values = YAML(typ='safe').load(data)

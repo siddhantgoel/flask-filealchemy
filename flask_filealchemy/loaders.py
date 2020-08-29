@@ -43,7 +43,7 @@ class YAMLFileLoader(BaseLoader):
         return self.data_dir.joinpath(self.table.name).joinpath('_all.yml')
 
     def extract_records(self, model):
-        values = parse_yaml_file(self.data_path)
+        values = parse_yaml_file(self.data_path.as_posix())
 
         for value in values:
             kwargs = {
@@ -87,7 +87,9 @@ class YAMLDirectoryLoader(_DirectoryLoaderValidateMixin, BaseLoader):
                 continue
 
             values = parse_yaml_file(
-                self.data_dir.joinpath(self.table.name).joinpath(entry.name)
+                self.data_dir.joinpath(self.table.name)
+                .joinpath(entry.name)
+                .as_posix()
             )
 
             kwargs = {
@@ -119,7 +121,9 @@ class MarkdownFrontmatterDirectoryLoader(
                 continue
 
             values = frontmatter.load(
-                self.data_dir.joinpath(self.table.name).joinpath(entry.name)
+                self.data_dir.joinpath(self.table.name)
+                .joinpath(entry.name)
+                .as_posix()
             )
 
             kwargs = {
