@@ -67,7 +67,7 @@ class BlogPost(db.Model):
 
    slug = Column(String(255), primary_key=True)
    title = Column(String(255), nullable=False)
-   contents = Column(Text, nullable=False)
+   content = Column(Text, nullable=False)
 ```
 
 ### Add some data
@@ -85,12 +85,12 @@ The first way is to have multiple YAML files inside the `data/<__tablename__>/`
 directory, each file corresponding to one record.
 
 In case of the "blog" example, we can define a new `BlogPost` record by creating
-the file `data/blog_posts/first-post-ever.yml` with the following contents.
+the file `data/blog_posts/first-post-ever.yml` with the following content.
 
 ```yaml
 slug: first-post-ever
 title: First post ever!
-contents: |
+content: |
   This blog post talks about how it's the first post ever!
 ```
 
@@ -108,11 +108,11 @@ For the "blog" example, this would look like the following.
 ```yaml
 - slug: first-post-ever
  title: First post ever!
- contents: This blog post talks about how it's the first post ever!
+ content: This blog post talks about how it's the first post ever!
 
 - slug: second-post-ever
  title: second post ever!
- contents: This blog post talks about how it's the second post ever!
+ content: This blog post talks about how it's the second post ever!
  ```
 
 #### 3. Markdown/Frontmatter
@@ -122,7 +122,7 @@ Frontmatter metadata.
 
 In case of the blog example, it's possible to create a new `BlogPost` record by
 defining a `data/blog_posts/first-post-ever.md` file with the following
-contents.
+content.
 
 ```markdown
 ---
@@ -132,6 +132,9 @@ title: First post ever!
 
 This blog post talks about how it's the first post ever!
 ```
+
+Please note that when defining data using markdown, the name of the column
+associated with the main markdown body **needs** to be `content`.
 
 #### 4. Configure and load
 
