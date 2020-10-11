@@ -107,12 +107,12 @@ For the "blog" example, this would look like the following.
 
 ```yaml
 - slug: first-post-ever
- title: First post ever!
- content: This blog post talks about how it's the first post ever!
+  title: First post ever!
+  content: This blog post talks about how it's the first post ever!
 
 - slug: second-post-ever
- title: second post ever!
- content: This blog post talks about how it's the second post ever!
+  title: second post ever!
+  content: This blog post talks about how it's the second post ever!
  ```
 
 #### 3. Markdown/Frontmatter
