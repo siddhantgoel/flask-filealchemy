@@ -3,7 +3,7 @@ name = "flask-filealchemy"
 version = "0.6.1"
 description = "YAML-formatted plain-text file based models for Flask backed by Flask-SQLAlchemy"
 readme = "README.md"
-authors = ["Siddhant Goel <me@sgoel.org>"]
+authors = ["Siddhant Goel <me@sgoel.dev>"]
 license = "MIT"
 classifiers = [
     "Development Status :: 4 - Beta",
