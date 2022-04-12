@@ -164,7 +164,7 @@ reflected in the in-memory data store but won't be persisted to disk.
 
 Contributions are most welcome!
 
-Please make sure you have Python 3.5+ and [Poetry] installed.
+Please make sure you have Python 3.7+ and [Poetry] installed.
 
 1. Git clone the repository -
    `git clone https://github.com/siddhantgoel/flask-filealchemy`.
@@ -172,7 +172,7 @@ Please make sure you have Python 3.5+ and [Poetry] installed.
 2. Install the packages required for development - `poetry install`.
 
 3. That's basically it. You should now be able to run the test suite -
-   `poetry run py.test`.
+   `poetry run pytest`.
 
 [Flask]: https://flask.palletsprojects.com/
 [Flask-SQLAlchemy]: https://flask-sqlalchemy.palletsprojects.com/

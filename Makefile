@@ -13,7 +13,7 @@ lint-mypy:
 lint: lint-black lint-flake8 lint-mypy
 
 test-pytest:
-	poetry run py.test tests/
+	poetry run pytest tests/
 
 test: test-pytest
 
