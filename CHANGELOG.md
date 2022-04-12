@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.7.0
+- Drop support for Python 3.5 and 3.5
+- Enable support for Python 3.9 and 3.10
+
 ## v0.6.1
 - Allow non-required model fields in Markdown loader
 
