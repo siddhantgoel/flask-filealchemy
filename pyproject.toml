@@ -25,19 +25,18 @@ repository = "https://github.com/siddhantgoel/flask-filealchemy"
 documentation = "https://github.com/siddhantgoel/flask-filealchemy"
 
 [tool.poetry.dependencies]
-python = "^3.5"
-flask = "^1.0"
-flask-sqlalchemy = "^2.4"
-ruamel-yaml = "^0.16"
-python-frontmatter = "^0.5.0"
+python = "^3.7"
+flask = "^2.1"
+"flask-sqlalchemy" = "^2.5"
+"ruamel.yaml" = "^0.17"
+"python-frontmatter" = "^1.0"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.7"
-flask = "^1.1"
-pytest = "^5.4"
-black = {version = "^19.10b0",python = "^3.6"}
-mypy = "^0.770.0"
-sqlalchemy-stubs = "^0.3"
+flake8 = "^4.0"
+pytest = "^7.1"
+black = "^22.3"
+mypy = "^0.942"
+"sqlalchemy-stubs" = "^0.4"
 
 [tool.black]
 line-length = 79
