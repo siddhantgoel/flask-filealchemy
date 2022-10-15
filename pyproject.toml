@@ -35,7 +35,7 @@ flask = "^2.1"
 flake8 = "^5.0"
 pytest = "^7.1"
 black = "^22.3"
-mypy = "^0.942"
+mypy = "^0.982"
 "sqlalchemy-stubs" = "^0.4"
 
 [tool.black]
