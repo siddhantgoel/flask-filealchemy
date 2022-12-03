@@ -7,6 +7,11 @@ from sqlalchemy.orm import relationship
 
 from flask_filealchemy import FileAlchemy
 
+# configure Flask-SQLAlchemy
+
+db = SQLAlchemy()
+
+# initialize the application
 
 app = Flask(__name__)
 
@@ -15,7 +20,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
 
 class Author(db.Model):
@@ -34,7 +39,7 @@ class Book(db.Model):
         String(255), ForeignKey('authors.slug'), nullable=False
     )
     bestseller = Column(Boolean, server_default='false')
-    content = Column(Text, default=None)
+    contents = Column(Text, default=None)
 
     author = relationship('Author', backref='books')
 
@@ -71,4 +76,4 @@ def book(slug):
     if not book:
         abort(404)
 
-    return book.content
+    return book.title
