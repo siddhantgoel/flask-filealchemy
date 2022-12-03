@@ -10,7 +10,11 @@ def app():
 
 @pytest.fixture
 def db(app):
+    sqlalchemy = SQLAlchemy()
+
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    return SQLAlchemy(app)
+    sqlalchemy.init_app(app)
+
+    return sqlalchemy

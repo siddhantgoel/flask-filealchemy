@@ -7,25 +7,21 @@ from sqlalchemy.orm import relationship
 from flask_filealchemy import FileAlchemy, LoadError
 
 
-def test_directory_does_not_exist(db):
-    app = db.get_app()
-
+def test_directory_does_not_exist(db, app):
     class Author(db.Model):
         __tablename__ = 'authors'
 
         slug = Column(String(255), primary_key=True)
         name = Column(String(255), nullable=False)
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = '/does/not/exist/'
+    app.config['FILEALCHEMY_MODELS'] = (Author,)
+    app.config['FILEALCHEMY_DATA_DIR'] = '/does/not/exist/'
 
     with pytest.raises(LoadError):
         FileAlchemy(app, db).load_tables()
 
 
-def test_invalid_directory(db, tmpdir):
-    app = db.get_app()
-
+def test_invalid_directory(db, app, tmpdir):
     class Author(db.Model):
         __tablename__ = 'authors'
 
@@ -35,16 +31,14 @@ def test_invalid_directory(db, tmpdir):
     file_ = tmpdir.join('file.yml')
     file_.write('does not matter')
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = file_.strpath
+    app.config['FILEALCHEMY_MODELS'] = (Author,)
+    app.config['FILEALCHEMY_DATA_DIR'] = file_.strpath
 
     with pytest.raises(LoadError):
         FileAlchemy(app, db).load_tables()
 
 
-def test_model_not_found(db, tmpdir):
-    app = db.get_app()
-
+def test_model_not_found(db, app, tmpdir):
     class Author(db.Model):
         __tablename__ = 'authors'
 
@@ -65,16 +59,14 @@ def test_model_not_found(db, tmpdir):
     muster_book = books_dir.join('muster-book.yml')
     muster_book.write('slug: muster-book')
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+    app.config['FILEALCHEMY_MODELS'] = (Author,)
+    app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     with pytest.raises(LoadError, match='no model found'):
         FileAlchemy(app, db).load_tables()
 
 
-def test_load_yaml_single_table(db, tmpdir):
-    app = db.get_app()
-
+def test_load_yaml_single_table(db, app, tmpdir):
     class Author(db.Model):
         __tablename__ = 'authors'
 
@@ -105,21 +97,20 @@ def test_load_yaml_single_table(db, tmpdir):
         )
     )
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+    app.config['FILEALCHEMY_MODELS'] = (Author,)
+    app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
-    assert Author.query.count() == 2
+    with app.app_context():
+        assert len(db.session.execute(db.select(Author)).all()) == 2
 
 
-def test_invalid_data(db, tmpdir):
-    app = db.get_app()
-
+def test_invalid_data(db, app, tmpdir):
     class Author(db.Model):
         __tablename__ = 'authors'
 
-        slug = Column(String(255), primary_key=True)
+        slug = Column(String(255), primary_key=True, nullable=False)
         name = Column(String(255), nullable=False)
 
     data_dir = tmpdir.mkdir('data_dir')
@@ -130,16 +121,14 @@ def test_invalid_data(db, tmpdir):
     for data in ('invalid', '[1, 2, 3]', 'key: value'):
         invalid.write(data)
 
-        db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-        db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+        app.config['FILEALCHEMY_MODELS'] = (Author,)
+        app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
         with pytest.raises(LoadError):
             FileAlchemy(app, db).load_tables()
 
 
-def test_yaml_foreign_keys(db, tmpdir):
-    app = db.get_app()
-
+def test_yaml_foreign_keys(db, app, tmpdir):
     class Author(db.Model):
         __tablename__ = 'authors'
 
@@ -202,18 +191,17 @@ def test_yaml_foreign_keys(db, tmpdir):
         )
     )
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Author, Book)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+    app.config['FILEALCHEMY_MODELS'] = (Author, Book)
+    app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
-    assert Author.query.count() == 1
-    assert Book.query.count() == 2
+    with app.app_context():
+        assert len(db.session.execute(db.select(Author)).all()) == 1
+        assert len(db.session.execute(db.select(Book)).all()) == 2
 
 
-def test_yaml_load_from_all_file(db, tmpdir):
-    app = db.get_app()
-
+def test_yaml_load_from_all_file(db, app, tmpdir):
     class Author(db.Model):
         __tablename__ = 'authors'
 
@@ -236,17 +224,16 @@ def test_yaml_load_from_all_file(db, tmpdir):
         )
     )
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Author,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+    app.config['FILEALCHEMY_MODELS'] = (Author,)
+    app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
-    assert Author.query.count() == 2
+    with app.app_context():
+        assert len(db.session.execute(db.select(Author)).all()) == 2
 
 
-def test_load_markdown(db, tmpdir):
-    app = db.get_app()
-
+def test_load_markdown(db, app, tmpdir):
     class Book(db.Model):
         __tablename__ = 'books'
 
@@ -286,25 +273,22 @@ def test_load_markdown(db, tmpdir):
         )
     )
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Book,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+    app.config['FILEALCHEMY_MODELS'] = (Book,)
+    app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
-    assert Book.query.count() == 2
+    with app.app_context():
+        assert len(db.session.execute(db.select(Book.slug)).all()) == 2
 
-    first = Book.query.filter_by(slug='first').one()
-    assert first is not None
-    assert first.content == 'This is the first book!'
+        first = db.session.execute(db.select(Book).filter_by(slug="first")).one()[0]
+        assert first.content == "This is the first book!"
 
-    second = Book.query.filter_by(slug='second').one()
-    assert second is not None
-    assert second.content == 'This is the second book!'
+        second = db.session.execute(db.select(Book).filter_by(slug="second")).one()[0]
+        assert second.content == "This is the second book!"
 
 
-def test_load_markdown_optional_fields(db, tmpdir):
-    app = db.get_app()
-
+def test_load_markdown_optional_fields(db, app, tmpdir):
     class Book(db.Model):
         __tablename__ = 'books'
 
@@ -331,16 +315,14 @@ def test_load_markdown_optional_fields(db, tmpdir):
         )
     )
 
-    db.app.config['FILEALCHEMY_MODELS'] = (Book,)
-    db.app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
+    app.config['FILEALCHEMY_MODELS'] = (Book,)
+    app.config['FILEALCHEMY_DATA_DIR'] = data_dir.strpath
 
     FileAlchemy(app, db).load_tables()
 
-    assert Book.query.count() == 1
+    with app.app_context():
+        book = db.session.execute(db.select(Book)).one()[0]
 
-    book = Book.query.first()
-
-    assert book is not None
-    assert book.title == 'Example'
-    assert book.slug == 'example'
-    assert book.category is None
+        assert book.title == 'Example'
+        assert book.slug == 'example'
+        assert book.category is None
