@@ -37,14 +37,18 @@ class FileAlchemy:
 
                     if not model:
                         raise LoadError(
-                            _fmt_log('no model found for {}'.format(table.name))
+                            _fmt_log(
+                                'no model found for {}'.format(table.name)
+                            )
                         )
 
                     loader = loader_for(self.data_dir, table)
 
                     if not loader:
                         raise LoadError(
-                            _fmt_log('no loader found for {}'.format(table.name))
+                            _fmt_log(
+                                'no loader found for {}'.format(table.name)
+                            )
                         )
 
                     try:

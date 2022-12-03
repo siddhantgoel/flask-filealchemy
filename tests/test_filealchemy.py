@@ -281,10 +281,14 @@ def test_load_markdown(db, app, tmpdir):
     with app.app_context():
         assert len(db.session.execute(db.select(Book.slug)).all()) == 2
 
-        first = db.session.execute(db.select(Book).filter_by(slug="first")).one()[0]
+        first = db.session.execute(
+            db.select(Book).filter_by(slug="first")
+        ).one()[0]
         assert first.content == "This is the first book!"
 
-        second = db.session.execute(db.select(Book).filter_by(slug="second")).one()[0]
+        second = db.session.execute(
+            db.select(Book).filter_by(slug="second")
+        ).one()[0]
         assert second.content == "This is the second book!"
 
 
