@@ -60,7 +60,9 @@ app = Flask(__name__)
 # configure Flask-SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
+
+db.init_app(app)
 
 class BlogPost(db.Model):
    __tablename__ = 'blog_posts'
