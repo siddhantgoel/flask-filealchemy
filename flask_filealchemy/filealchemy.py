@@ -28,31 +28,32 @@ class FileAlchemy:
             )
 
     def load_tables(self):
-        self.db.create_all()
+        with self.app.app_context():
+            self.db.create_all()
 
-        with self.make_session() as session:
-            for table in self.db.metadata.sorted_tables:
-                model = self.model_for(table)
+            with self.make_session() as session:
+                for table in self.db.metadata.sorted_tables:
+                    model = self.model_for(table)
 
-                if not model:
-                    raise LoadError(
-                        _fmt_log('no model found for {}'.format(table.name))
-                    )
+                    if not model:
+                        raise LoadError(
+                            _fmt_log('no model found for {}'.format(table.name))
+                        )
 
-                loader = loader_for(self.data_dir, table)
+                    loader = loader_for(self.data_dir, table)
 
-                if not loader:
-                    raise LoadError(
-                        _fmt_log('no loader found for {}'.format(table.name))
-                    )
+                    if not loader:
+                        raise LoadError(
+                            _fmt_log('no loader found for {}'.format(table.name))
+                        )
 
-                try:
-                    for record in loader.extract_records(model):
-                        session.add(record)
+                    try:
+                        for record in loader.extract_records(model):
+                            session.add(record)
 
-                    session.flush()
-                except IntegrityError as e:
-                    raise LoadError(e)
+                        session.flush()
+                    except IntegrityError as e:
+                        raise LoadError(e)
 
     @contextmanager
     def make_session(self):
