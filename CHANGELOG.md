@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v0.8.0
+- Update flask-sqlalchemy to version 3
+
 ## v0.7.0
 - Drop support for Python 3.5 and 3.5
 - Enable support for Python 3.9 and 3.10
