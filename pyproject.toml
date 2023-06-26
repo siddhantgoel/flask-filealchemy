@@ -33,7 +33,7 @@ flask = "^2.2"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^5.0"
-pytest = "^7.3"
+pytest = "^7.4"
 black = "^23.3"
 mypy = "^1.4"
 "sqlalchemy-stubs" = "^0.4"
