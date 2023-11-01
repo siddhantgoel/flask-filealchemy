@@ -28,7 +28,7 @@ documentation = "https://github.com/siddhantgoel/flask-filealchemy"
 python = "^3.7"
 flask = "^2.2"
 "flask-sqlalchemy" = "^3.0"
-"ruamel.yaml" = "^0.17"
+"ruamel.yaml" = ">=0.17,<0.19"
 "python-frontmatter" = "^1.0"
 
 [tool.poetry.dev-dependencies]
