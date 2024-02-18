@@ -25,10 +25,10 @@ jobs:
       run: poetry install
 
     - name: Lint with flake8
-      run: make lint-flake8
+      run: poetry run task lint-flake8
 
     - name: Lint with black
-      run: make lint-black
+      run: poetry run task lint-black
 
     - name: Test with pytest
-      run: make test
+      run: poetry run task test
