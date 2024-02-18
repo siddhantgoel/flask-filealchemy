@@ -38,6 +38,9 @@ black = "^23.3"
 mypy = "^1.4"
 "sqlalchemy-stubs" = "^0.4"
 
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.12.2"
+
 [tool.black]
 line-length = 79
 skip-string-normalization = true
