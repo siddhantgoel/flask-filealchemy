@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.9.0
+- Enable support for Python 3.11, 3.12, and 3.13
+- Drop support for Python 3.7 and 3.8
+- Update flask to version 3.1
+- Update flask-sqlalchemy to version 3.1
+
 ## v0.8.0
 - Update flask-sqlalchemy to version 3
 
