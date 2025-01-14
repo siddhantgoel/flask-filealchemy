@@ -7,28 +7,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-         python-version: ["3.7", "3.8", "3.9", "3.10"]
+         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Set up poetry
-      run: |
-        python -m pip install --upgrade poetry
-        poetry run pip install --upgrade pip setuptools
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
 
     - name: Install dependencies
-      run: poetry install
+      run: uv sync
 
-    - name: Lint with flake8
-      run: poetry run task lint-flake8
+    - name: Lint
+      run: uv run ruff check src/ tests/
 
-    - name: Lint with black
-      run: poetry run task lint-black
-
-    - name: Test with pytest
-      run: poetry run task test
+    - name: Test
+      run: uv run pytest tests/

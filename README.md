@@ -166,18 +166,18 @@ reflected in the in-memory data store but won't be persisted to disk.
 
 Contributions are most welcome!
 
-Please make sure you have Python 3.7+ and [Poetry] installed.
+Please make sure you have Python 3.9+ and [uv] installed.
 
 1. Git clone the repository -
    `git clone https://github.com/siddhantgoel/flask-filealchemy`.
 
-2. Install the packages required for development - `poetry install`.
+2. Install the packages required for development - `uv sync`.
 
 3. That's basically it. You should now be able to run the test suite -
-   `poetry run pytest`.
+   `uv run pytest`.
 
-[Flask]: https://flask.palletsprojects.com/
 [Flask-SQLAlchemy]: https://flask-sqlalchemy.palletsprojects.com/
+[Flask]: https://flask.palletsprojects.com/
 [Frozen-Flask]: https://pythonhosted.org/Frozen-Flask/
-[Poetry]: https://python-poetry.org/
 [SQLAlchemy]: https://www.sqlalchemy.org/
+[uv]: https://docs.astral.sh/uv/
